@@ -1,0 +1,50 @@
+{
+  "pages": {
+    "/(my-account)/my-account/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(my-account)/my-account/layout.js"
+    ],
+    "/(my-account)/my-account/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(my-account)/my-account/loading.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/(my-account)/my-account/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(my-account)/my-account/page.js"
+    ],
+    "/(login-routes)/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(login-routes)/login/page.js"
+    ],
+    "/(login-routes)/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(login-routes)/layout.js"
+    ],
+    "/(my-account)/my-account/edit-profile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(my-account)/my-account/edit-profile/page.js"
+    ],
+    "/(my-account)/my-account/edit-profile/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(my-account)/my-account/edit-profile/layout.js"
+    ],
+    "/(my-account)/my-account/edit-profile/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/(my-account)/my-account/edit-profile/loading.js"
+    ]
+  }
+}
