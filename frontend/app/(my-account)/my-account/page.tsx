@@ -41,7 +41,6 @@ async function MyAccount() {
   }
   
   return (
-    <Suspense fallback={<Teste />}>
       <section
         className={`h-screen w-full flex items-start justify-center ${
           render && "soft-entry"
@@ -74,8 +73,7 @@ async function MyAccount() {
                   <Image
                     src={session?.user.profile_img || ""}
                     alt="user profile"
-                    quality={100}
-                    className="w-full object-cover rounded-full border-[4px] border-custom-grayTwo min-w-[115px] min-h-[115px] max-w-[115px] max-h-[115px]"
+                    className="w-full object-cover rounded-full border-[6px] border-custom-grayTwo min-w-[115px] min-h-[115px] max-w-[115px] max-h-[115px]"
                     width={115}
                     height={115}
                   />
@@ -238,7 +236,6 @@ async function MyAccount() {
           </div>
         </main>
       </section>
-    </Suspense>
   );
 }
 

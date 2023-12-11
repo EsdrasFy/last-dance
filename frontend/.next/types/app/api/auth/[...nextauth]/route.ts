@@ -1,4 +1,4 @@
-// File: /home/esdras/Documentos/GitHub/templateNew/frontend/app/api/auth/[...nextauth]/route.ts
+// File: /home/esdras/Documentos/GitHub/last-dance/frontend/app/api/auth/[...nextauth]/route.ts
 import * as entry from '../../../../../../app/api/auth/[...nextauth]/route.js'
 import type { NextRequest } from 'next/server.js'
 

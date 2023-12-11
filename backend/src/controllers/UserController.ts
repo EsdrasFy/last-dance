@@ -114,7 +114,6 @@ async function createUser(req: Request, res: Response) {
     res.status(500).json({ error: "Erro ao criar usuário" });
   }
 }
-
 async function updateUser(req: Request, res: Response) {
   const {
     user_id,
@@ -129,24 +128,40 @@ async function updateUser(req: Request, res: Response) {
     gender,
     cpf,
   } = req.body;
-  console.log(address + "address");
+  if (!username || username.length < 3) {
+    return res.status(422).json({ msg: "Padrão de usuário incorreto!" });
+  }
+  if (!fullname || fullname.length < 10) {
+    return res.status(422).json({ msg: "Necessário nome completo!" });
+  }
+  if (!email) {
+    return res.status(422).json({ msg: "Necessário email!" });
+  }
+  if (!password_hash || password_hash.length < 6) {
+    return res.status(422).json({ msg: "Padrão de senha incorreto!" });
+  }
+  if (!gender) {
+    return res.status(422).json({ msg: "Especifique seu gênero!" });
+  }
   try {
     const user = (await User.findOne({
       where: {
         user_id: user_id,
       },
     })) as UserInterface;
-
     const existingCPF = (await User.findOne({
       where: {
         cpf: cpf,
       },
     })) as UserInterface;
-
+    let image
+    if(!profile_img){
+      image = user.profile_img
+    }
     if (existingCPF && existingCPF.user_id !== user.user_id) {
       return res.status(400).json({ msg: "CPF já está em uso." });
     }
-
+    
     const existingEmail = (await User.findOne({
       where: {
         email: email,
@@ -157,7 +172,7 @@ async function updateUser(req: Request, res: Response) {
       console.log("Email já está em uso por outro usuário.");
       return res.status(400).json({ msg: "Email já está em uso." });
     }
-
+    
     const existingUsername = (await User.findOne({
       where: {
         username: username,
@@ -166,8 +181,10 @@ async function updateUser(req: Request, res: Response) {
     if (existingUsername && existingUsername.user_id !== user.user_id) {
       return res.status(400).json({ msg: "Username já está em uso." });
     }
-
-    const [updatedRows] = await User.update(
+    console.log("profile_img")
+    console.log(profile_img)    
+    console.log("profile_img")
+    await User.update(
       {
         username: username,
         fullname: fullname,
@@ -183,33 +200,15 @@ async function updateUser(req: Request, res: Response) {
       {
         where: { user_id: user_id },
       }
-    );
-    if (!username || username.length < 3) {
-      return res.status(422).json({ msg: "Padrão de usuário incorreto!" });
-    }
-    if (!fullname || fullname.length < 10) {
-      return res.status(422).json({ msg: "Necessário nome completo!" });
-    }
-    if (!email) {
-      return res.status(422).json({ msg: "Necessário email!" });
-    }
-    if (!password_hash || password_hash.length < 6) {
-      return res.status(422).json({ msg: "Padrão de senha incorreto!" });
-    }
-    if (!gender) {
-      return res.status(422).json({ msg: "Especifique seu gênero!" });
-    }
-    if (updatedRows > 0) {
+      );
+
       return res
         .status(200)
         .json({ msg: "Atualização bem-sucedida", status: 200 });
-    } else {
-      return res
-        .status(404)
-        .json({ msg: "Usuário não encontrado", status: 404 });
-    }
-  } catch (error) {
+    } 
+  catch (error) {
     console.error("Erro ao atualizar usuários:", error);
+    
     return res
       .status(500)
       .json({ msg: "Erro ao atualizar usuários", status: 500 });

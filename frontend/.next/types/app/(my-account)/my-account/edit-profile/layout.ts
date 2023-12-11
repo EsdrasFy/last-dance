@@ -1,4 +1,4 @@
-// File: /home/esdras/Documentos/GitHub/templateNew/frontend/app/(my-account)/my-account/edit-profile/layout.tsx
+// File: /home/esdras/Documentos/GitHub/last-dance/frontend/app/(my-account)/my-account/edit-profile/layout.tsx
 import * as entry from '../../../../../../app/(my-account)/my-account/edit-profile/layout.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
