@@ -11,7 +11,7 @@ import {
   HiSearch,
 } from "react-icons/hi";
 import { AiOutlineUser } from "react-icons/ai";
-import { MdKeyboardVoice } from "react-icons/md";
+import SearchInput from "../ui/searchInput";
 
 interface headerProps {
   href: string;
@@ -25,31 +25,15 @@ async function Header({ href }: headerProps) {
           <Image
             src={logo}
             alt="logo image"
-            width={50}
-            className="max-md:w-10 h-10"
+            width={35}
+            height={35}
+            className=""
           />
-          <p className="max-w-[80px] leading-7 text-[15px] tracking-widest text-white max-md:text-base">
+          <p className="max-w-[80px] leading-5 text-[15px] tracking-widest text-white max-md:text-base">
             URBAN VOGUE
           </p>
         </figure>
-        <form className="w-[60%] relative max-md:hidden">
-          <div className={`relative w-full`}>
-            <input
-              type="search"
-              className={`relative bg-custom-grayThree rounded-3xl py-2 pl-16 text-white duration-200 transition-all ease-linear hover:opacity-70 w-full outline-none searchInput text-lg max-[400px]:pl-12 `}
-              placeholder="ex: Camisa"
-            />
-            <button className="absolute right-3 z-10 top-[50%] translate-y-[-50%] text-white text-3xl duration-200 transition-all ease-linear hover:text-custom-pink max-md:text-2xl ">
-              <MdKeyboardVoice />
-            </button>
-            <button
-              type="submit"
-              className="absolute left-0 top-0 bg-white text-grayOnerounded-full duration-200 transition-all ease-linear hover:opacity-90 z-10 p-[9.5px] text-2xl rounded-full"
-            >
-              <HiSearch />
-            </button>
-          </div>
-        </form>
+        <SearchInput classname="max-md:hidden w-[60%]"/>
         <ul className="flex gap-6 items-center justify-center mt-1">
           <li className=" text-3xl text-white duration-200 transition-all ease-linear hover:-translate-y-1.5 hover:text-custom-pink cursor-pointer max-md:text-[28px]">
             <button>

@@ -4,6 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Nanum+Gothic&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Major+Mono+Display&display=swap');
 
 :root {
   --bg-gray-login: url("/assets/bg-gray-login.jpg");
@@ -11,6 +12,11 @@
 }
 *{
   font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none !important;
+  border: none;
 }
 body{
   background-color: #171a1b;
@@ -159,4 +165,31 @@ body{
   border-radius: 50%;
   right: 0 !important;
   max-width: 50px;
+}
+.writing {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-weight: 300;
+  font-size: 1.7em;
+}
+
+@media(max-width: 550px){
+  .writing{
+    font-size: 1.3em !important;
+  }
+}
+
+@media(max-width: 350px){
+  .writing{
+    font-size: 1em !important;
+  }
+}
+.custom-slide {
+  min-width: 250.5px;
+  background-color: red;
+  height: 385px;
+}
+.swiper-wrapper{
+  display: flex;
+  max-width: 970px;
 }

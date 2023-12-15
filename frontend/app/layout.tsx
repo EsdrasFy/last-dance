@@ -24,7 +24,7 @@ export default async function RootLayout({
       <head>
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} flex w-full justify-center min-h-screen items-center`}>
         
           <NextAuthSessionProvider>
             <Header href={session ? "/my-account" : "/login"} />
