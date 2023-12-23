@@ -13,23 +13,6 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 const routes = express.Router();
 
-interface UserInterface extends Model<any, any> {
-  user_id: number;
-  fullname: string;
-  username: string;
-  email: string;
-  profile_img: string;
-  password_hash: string;
-  date_of_birth: Date;
-  address: string;
-  phone: string;
-  shopping: number;
-  gender: string;
-  cpf: string;
-  cards: number;
-  created_at: Date;
-  messages: number;
-}
 
 // Rotas para o usuário
 routes.get("/", DefaultController.read);
@@ -48,5 +31,6 @@ routes.post("/product/new", ProductController.createProduct);
 routes.put("/product/update", ProductController.updateProduct);
 routes.delete("/product/delete/:id", ProductController.deleteProduct);
 routes.get("/product/filter", ProductController.filterProducts);
+routes.get("/scraping/:content", ProductController.scraping);
 
 export default routes;

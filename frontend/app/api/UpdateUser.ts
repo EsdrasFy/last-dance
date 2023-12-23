@@ -41,8 +41,8 @@ async function UpdateUser({
     console.log(profile + "seila")
     const registerUrl = "http://localhost:9090/usuarios/update";
     const { data } = await axios.put<RegisterApiResponse>(registerUrl, {
-      user_id: userId,
-      fullname,
+    user_id: userId,
+    fullname,
       username,
       email,
       profile_img: profile,

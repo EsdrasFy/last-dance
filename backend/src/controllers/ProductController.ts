@@ -1,6 +1,7 @@
 import Product from "../models/Product";
 import { Op, WhereOptions } from "sequelize";
 import Sequelize from "sequelize/types/sequelize";
+import * as puppeteer from "puppeteer";
 import { Request, Response } from "express";
 async function createProduct(req: Request, res: Response) {
   const {
@@ -22,9 +23,10 @@ async function createProduct(req: Request, res: Response) {
     cor_id,
     promotion,
     classe,
+    images,
   } = req.body;
 
-  if (!title || !summary || !quantidy || !price || !category || !parcelable) {
+  if (!title || !summary || !quantidy || !price || !category) {
     return res.status(422).json({ msg: "Insira pelo menos os dados básicos!" });
   }
 
@@ -49,7 +51,6 @@ async function createProduct(req: Request, res: Response) {
       promotion,
       classe,
     });
-
     res.status(201).json({ product: produto, status: 201 });
   } catch (error) {
     console.error("Erro ao criar produto:", error);
@@ -243,4 +244,362 @@ async function filterProducts(req: Request, res: Response) {
   }
 }
 
-export default { createProduct, updateProduct, deleteProduct, filterProducts };
+import * as natural from "natural";
+import axios from "axios";
+const tokenizer = new natural.WordTokenizer();
+const stopWords = new Set([
+  "em",
+  "que",
+  "com",
+  "para",
+  "uma",
+  "do",
+  "o",
+  "a",
+  "confeccionada",
+  "barato",
+  "loja",
+  "roupa",
+  "moda",
+  "especial",
+  "estilo",
+  "coleção",
+  "novidade",
+  "promoção",
+  "oferta",
+  "preço",
+  "desconto",
+  "venda",
+  "produto",
+  "marca",
+  "tendência",
+  "estação",
+  "comprar",
+  "look",
+  "estiloso",
+  "fashion",
+  "acessório",
+  "tamanho",
+  "cores",
+  "frete",
+  "grátis",
+  "novidades",
+  "coleções",
+  "estilos",
+  "promoções",
+  "ofertas",
+  "preços",
+  "vendas",
+  "produtos",
+  "marcas",
+  "tendências",
+  "estação",
+  "compras",
+  "looks",
+  "estilosos",
+  "fashions",
+  "acessórios",
+  "tamanhos",
+  "colorido",
+  "coloridos",
+  "frete",
+  "gratuito",
+  "exclusivo",
+  "exclusivos",
+  "qualidade",
+  "última",
+  "últimas",
+  "último",
+  "últimos",
+  "ultima",
+  "ultimas",
+  "ultimo",
+  "ultimos",
+  "autêntico",
+  "autênticos",
+  "autêntica",
+  "autênticas",
+  "original",
+  "originais",
+  "autenticidade",
+  "coleção",
+  "colecoes",
+  "estação",
+  "estacoes",
+  "temporada",
+  "temporadas",
+  "verão",
+  "primavera",
+  "outono",
+  "inverno",
+  "veranil",
+  "veranis",
+  "primaveril",
+  "primaveris",
+  "outonal",
+  "outonais",
+  "invernal",
+  "invernais",
+  "vermelho",
+  "vermelhos",
+  "vermelha",
+  "vermelhas",
+  "azul",
+  "azuis",
+  "amarelo",
+  "amarelos",
+  "amarela",
+  "amarelas",
+  "verde",
+  "verdes",
+  "preto",
+  "pretos",
+  "preta",
+  "pretas",
+  "branco",
+  "brancos",
+  "branca",
+  "brancas",
+  "sem",
+  "linho",
+  "de",
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+]);
+
+function extrairPalavrasChave(descricao: string): string[] {
+  console.log("função chamada");
+
+  const tokens: string[] = tokenizer.tokenize(descricao) || [];
+
+  // Remove stop words
+  const tokensFiltrados = tokens.filter(
+    (token: string) => !stopWords.has(token.toLowerCase())
+  );
+
+  // Usa um stemmer para obter as raízes das palavras (opcional)
+  const stemmer = natural.PorterStemmer;
+  const stems: string[] = tokensFiltrados.map((token: string) =>
+    stemmer.stem(token)
+  );
+
+  // Conta a frequência das palavras
+  const frequenciaPalavras: { [key: string]: number } = {};
+  stems.forEach((stem: string) => {
+    if (frequenciaPalavras[stem]) {
+      frequenciaPalavras[stem]++;
+    } else {
+      frequenciaPalavras[stem] = 1;
+    }
+  });
+
+  // Ordena as palavras por frequência
+  const palavrasOrdenadas: string[] = Object.keys(frequenciaPalavras).sort(
+    (a, b) => frequenciaPalavras[b] - frequenciaPalavras[a]
+  );
+  // Pode ajustar o número de palavras-chave a serem retornadas
+
+  const numeroPalavrasChave: number = 5;
+
+  const palavrasChave: string[] = palavrasOrdenadas.slice(
+    0,
+    numeroPalavrasChave
+  );
+
+  return palavrasChave;
+}
+
+async function scraping(req: Request, res: Response) {
+  const urlClone = "https://www.posthaus.com.br/";
+
+  const searchFor = req.params.content;
+  console.log(searchFor);
+
+  try {
+    const browser = await puppeteer.launch({ headless: false });
+    const page = await browser.newPage();
+    console.log("Iniciei");
+
+    await page.goto(`${urlClone}${searchFor}`);
+    console.log("Fui para URL");
+
+    const links = await page.$$eval(".ZahOa > a", (el) =>
+      el.map((link) => link.href)
+    );
+
+    for (const link of links) {
+      await processProductLink(link, page);
+    }
+    await page.waitForTimeout(3000);
+    await browser.close();
+    res.json({ msg: "deu bom" }).status(200);
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function processProductLink(link: string, page: puppeteer.Page) {
+  await page.goto(link);
+  await page.waitForSelector(".jBoZhA > .jPWGbB > .gHwVao");
+  await page.waitForSelector(".eMQuAB > img");
+  await page.waitForSelector(".euhAJe h1");
+  await page.waitForSelector(".llynDC");
+  await page.waitForSelector(".rYQsU");
+  await page.waitForSelector(".sc-kgoBCf.jeIRcN");
+  const title = await page.$eval(".euhAJe h1", (element) => element.innerHTML);
+  const sizes = await page.$$eval(".llynDC", (el) =>
+    el.map((size) => size.innerHTML)
+  );
+  const regex: RegExp = /\s(\d+)x/i;
+  const preco = await page.$eval(".rYQsU", (element) => element.innerHTML);
+  const price = parseFloat(
+    preco
+      ?.replace(/&nbsp;|\s|[^\d,.]/g, "")
+      .replace("R$", "")
+      .replace(",", ".") || "0"
+  );
+
+  const brand = link.split("/")[3];
+  const category = link.split("/")[4];
+  const summary = await page.$eval(
+    ".jBoZhA > .jPWGbB > .gHwVao",
+    (element) => element.innerHTML
+  );
+  const palavrasChave: string[] = extrairPalavrasChave(summary);
+
+  const flags = palavrasChave.unshift(brand, category);
+
+  const images = await page.$$eval(".eMQuAB > img", (el) =>
+    el.map((img) => img.src)
+  );
+  const details = await page.$$eval(".sc-kgoBCf.jeIRcN", (el) =>
+    el.map((p) => p.innerHTML)
+  );
+
+  const getColorName = await page.$$eval(
+    "#colorSelectorRadioBullet_link > span",
+    (el) => el.map((name) => name.innerHTML)
+  );
+
+  const colors = getColorName ? getColorName : [];
+  const getPriceDiscont = await page.$$eval(
+    ".LSdgo .daKbcm.sc-ebFjAB.sc-dliRfk label",
+    (el) => el.map((elemento) => elemento.innerHTML)
+  );
+  const cleanPriceDiscont = getPriceDiscont ? getPriceDiscont : [];
+  const priceDiscont: string[] = cleanPriceDiscont
+    .map((element) => element.replace(/&nbsp;|\s/g, ""))
+    .filter((element) => element.trim() !== "");
+
+  const parcelable = priceDiscont.some((element) => element.includes("x"));
+  const match: string | undefined = priceDiscont.find((element) =>
+    regex.test(element)
+  );
+
+  const max_installments: number = match
+    ? parseInt(match.match(regex)![1], 10)
+    : 1;
+  const obj = {
+    title,
+    price,
+    parcelable,
+    max_installments,
+    priceDiscont,
+    flags,
+    images,
+    summary,
+    sizes,
+    palavrasChave,
+    details,
+    colors,
+    brand,
+    category,
+  };
+  await createProductInDatabase(obj);
+}
+
+async function createProductInDatabase(productInfo: any) {
+  const {title,
+    price,
+    parcelable,
+    max_installments,
+    priceDiscont,
+    flags,
+    images,
+    summary,
+    sizes,
+    palavrasChave,
+    details,
+    colors,
+    brand,
+    category} = productInfo
+  try {
+    const quantity = Math.floor(Math.random() * 100) + 1;
+    const sold = Math.floor(Math.random() * 200);
+    console.log(sold, quantity);
+
+    const assessment = Math.floor(Math.random() * 5) + 1;
+    const sizesAsString = sizes.join(", ");
+    const product = await Product.create({
+      title: title,
+      summary: summary,
+      quantidy: 2,
+      sold: 2,
+      price: price,
+      state: true,
+      category: category,
+      sizes: sizesAsString,/*gamb*/
+      brand: brand,
+      guarantee: "Warranty: 3 months of coverage by Urban Vogue.",
+      variation: "sem variação",/*retirar*/
+      assessment: 4.5,/* add qtd de avaliações ou padrao de 10*/
+      parcelable: parcelable,
+      max_installments: max_installments,
+      interest_rate: 23.0,
+    });
+    /*rever videos sobre relação de tabela e mudar o schema talvez*/
+    console.log("produto adicionado");
+  } catch (error) {
+    console.error(error);
+  }
+}
+export default {
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  filterProducts,
+  scraping,
+};

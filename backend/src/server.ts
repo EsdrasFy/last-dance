@@ -12,6 +12,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(routes);
 
+let c = 1;
+
 try {
   app.listen(PORT, () => {
     console.log(`Servidor rodando em ${PORT}`);

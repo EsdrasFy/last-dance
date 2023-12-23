@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
-
+import ProductImage from "./ProductImages";
 const Product = sequelize.define(
   "Product",
   {
@@ -63,7 +63,7 @@ const Product = sequelize.define(
     interest_rate: {
       type: DataTypes.DOUBLE,
     },
-    update_at: {
+    updated_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
       allowNull: false,
@@ -78,6 +78,21 @@ const Product = sequelize.define(
       references: {
         model: "colors",
         key: "colors_id",
+      },
+    },
+    images: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: ProductImage,
+        key: "product_id",
+      },
+    },
+
+    tags: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "tags_product",
+        key: "product_id",
       },
     },
     promotion: {
@@ -96,5 +111,5 @@ const Product = sequelize.define(
     tableName: "product",
   }
 );
-
+Product.hasMany(ProductImage, { foreignKey: 'product_id', sourceKey: 'images'  });
 export default Product;
