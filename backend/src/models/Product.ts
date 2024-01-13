@@ -1,6 +1,10 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db";
 import ProductImage from "./ProductImages";
+import ProductFlags from "./ProductFlags";
+import ProductColor from "./ProductColors";
+import ProductDetails from "./ProductDetails";
+import ProductSizes from "./ProductSizes";
 const Product = sequelize.define(
   "Product",
   {
@@ -26,7 +30,7 @@ const Product = sequelize.define(
       type: DataTypes.INTEGER,
     },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       defaultValue: 0,
     },
     state: {
@@ -37,21 +41,18 @@ const Product = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    sizes: {
-      type: DataTypes.STRING,
-    },
     brand: {
       type: DataTypes.STRING,
     },
     guarantee: {
       type: DataTypes.STRING,
     },
-    variation: {
-      type: DataTypes.STRING,
-    },
     assessment: {
       type: DataTypes.DOUBLE,
       defaultValue: 0,
+    },
+    qtd_assessment:{
+      type: DataTypes.INTEGER
     },
     parcelable: {
       type: DataTypes.BOOLEAN,
@@ -73,43 +74,57 @@ const Product = sequelize.define(
       defaultValue: DataTypes.NOW,
       allowNull: false,
     },
-    cor_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "colors",
-        key: "colors_id",
-      },
-    },
-    images: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: ProductImage,
-        key: "product_id",
-      },
-    },
-
-    tags: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "tags_product",
-        key: "product_id",
-      },
-    },
-    promotion: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "promos",
-        key: "promos_id",
-      },
-    },
-    classe: {
-      type: DataTypes.STRING
-    }
   },
   {
     underscored: true,
     tableName: "product",
-  }
-);
-Product.hasMany(ProductImage, { foreignKey: 'product_id', sourceKey: 'images'  });
-export default Product;
+  },
+  );
+ // Definindo a associação Um-para-Muitos entre Product e ProductColor
+Product.hasMany(ProductColor, {
+  foreignKey: 'product_id',
+  as: 'colors'
+});
+ProductColor.belongsTo(Product, {
+  foreignKey: 'product_id',
+  as: 'product'
+});
+
+// Definindo a associação Um-para-Muitos entre Product e ProductImage
+Product.hasMany(ProductImage, {
+  foreignKey: 'product_id',
+  as: 'images'
+});
+ProductImage.belongsTo(Product, {
+  foreignKey: 'product_id',
+  as: 'product'
+});
+
+Product.hasMany(ProductFlags, {
+  foreignKey: 'product_id',
+  as: 'flags'
+});
+ProductFlags.belongsTo(Product, {
+  foreignKey: 'product_id',
+  as: 'product'
+});
+
+Product.hasMany(ProductDetails, {
+  foreignKey: 'product_id',
+  as: 'details'
+});
+ProductDetails.belongsTo(Product, {
+  foreignKey: 'product_id',
+  as: 'product'
+});
+
+Product.hasMany(ProductSizes, {
+  foreignKey: 'product_id',
+  as: 'sizes'
+});
+ProductSizes.belongsTo(Product, {
+  foreignKey: 'product_id',
+  as: 'product'
+});
+
+export default Product

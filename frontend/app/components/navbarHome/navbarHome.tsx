@@ -1,20 +1,48 @@
-import Link from 'next/link'
-import React from 'react'
+import Link from "next/link";
+import React from "react";
 
 function NavbarHome() {
   return (
-    <nav className='w-full mt-2 text-custom-textColor max-md:hidden'>
-      <ul className='flex w-full gap-1 justify-between text-xl border-custom-pink'>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md max-lg:hidden'>SHIRTS</Link>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md'>BRANDS</Link>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md'>PANTS</Link>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md'>BEACH</Link>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md'>SHOES</Link>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md max-lg:hidden'>PERFUME</Link>
-        <Link href={"#"} className='hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear w-full text-center py-2 rounded-md'>RELEASES</Link>
+    <nav className="w-full mt-8 text-custom-textColor max-md:hidden font-light">
+      <ul className="flex w-full gap-1 justify-between text-2xl border-custom-pink font-extralight">
+        <li className="relative">
+          <Link href={"#"} className="bordernav max-lg:hidden">
+            SHIRTS
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href={"#"} className="bordernav">
+            BRANDS
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href={"#"} className="bordernav">
+            PANTS
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href={"#"} className="bordernav">
+            BEACH
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href={"#"} className="bordernav">
+            SHOES
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href={"#"} className="bordernav max-lg:hidden">
+            PERFUME
+          </Link>
+        </li>
+        <li className="relative">
+          <Link href={"#"} className="bordernav">
+            RELEASES
+          </Link>
+        </li>
       </ul>
     </nav>
-  )
+  );
 }
 
-export default NavbarHome
+export default NavbarHome;

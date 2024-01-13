@@ -4,11 +4,14 @@ import sequelize from "../config/db";
 const ProductImage = sequelize.define(
   'ProductImage',
   {
-    oroduct_id: {
+    image_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
       allowNull: false,
+    },
+    product_id:{
+      type: DataTypes.INTEGER
     },
     url: {
       type: DataTypes.STRING,
@@ -18,6 +21,7 @@ const ProductImage = sequelize.define(
   {
     underscored: true,
     tableName: 'product_images',
+    timestamps: false,
   }
 );
 

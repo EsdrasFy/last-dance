@@ -28,7 +28,7 @@ CREATE TABLE users (
     username VARCHAR(255) NOT NULL UNIQUE KEY,
     email VARCHAR(255) NOT NULL UNIQUE KEY,
     profile_img VARCHAR(255),
-    password_hash VARCHAR(50) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     date_of_birth DATE,
     address VARCHAR(255),
     phone VARCHAR(255),
@@ -38,7 +38,6 @@ CREATE TABLE users (
     cards INT,
     created_at DATETIME DEFAULT NOW() NOT NULL
 );
-ALTER TABLE users MODIFY COLUMN password_hash VARCHAR(255) NOT NULL;
 ALTER TABLE users ADD messages INT;
 ALTER TABLE users ADD FOREIGN KEY (messages) REFERENCES notify_messages(notify_id);
 ALTER TABLE users ADD classe VARCHAR(255);
@@ -56,8 +55,8 @@ VALUES
     ("User 9", "user9", "user9@example.com", "profile9.jpg", "password9", '1989-08-06', "606 Oak St", "Local Mall", "Male", "334455667_1", NOW()),
     ("User 10", "user10", "user10@example.com", "profile10.jpg", "password10", '1994-12-09', "707 Pine St", "Supermarket", "Female", "556677889_2", NOW());
     
-select * from users;
-describe users;
+-- select * from users;
+-- describe users;
 CREATE TABLE credit_cards (
     card_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -114,8 +113,8 @@ CREATE TABLE comments (
     timespost TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
-INSERT INTO comments (comment_text, user_id, product_id, timespost ) VALUES 
-("Achei ridiculo pra falar a verdade", 10, 3, 2.5, now());
+-- INSERT INTO comments (comment_text, user_id, product_id, timespost ) VALUES 
+-- ("Achei ridiculo pra falar a verdade", 10, 3, 2.5, now());
 CREATE TABLE product_images (
     product_id INT PRIMARY KEY AUTO_INCREMENT,
     url VARCHAR(255)
@@ -126,13 +125,13 @@ CREATE TABLE tags_product (
 );
 CREATE TABLE product (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(45) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     summary TEXT NOT NULL,
     quantidy INT NOT NULL,
     sold INT,
-    price INT DEFAULT 0,
+    price DECIMAL(10, 2) DEFAULT 0,
     state BOOLEAN DEFAULT TRUE,
-    category VARCHAR(15) NOT NULL,
+    category VARCHAR(100) NOT NULL,
     sizes VARCHAR(100),
     brand VARCHAR(100),
     guarantee VARCHAR(100),
@@ -152,10 +151,12 @@ CREATE TABLE product (
     promotion INT,
     FOREIGN KEY (promotion) REFERENCES promos(promos_id)
 );
-SELECT * FROM SequelizeMeta;
-ALTER TABLE product
-MODIFY COLUMN title VARCHAR(255);
+ -- TRUNCATE TABLE product;
+
+-- SELECT * FROM SequelizeMeta;
+
 /*gambiarra*/
+
 ALTER TABLE product ADD classe VARCHAR(255);
 ALTER TABLE users
 DROP COLUMN classe;
@@ -204,6 +205,8 @@ INSERT INTO buy_product(user_buy, product_buy , guarantee, variation,payment_met
 (4, 3, " 1 Mês", "Estampa 1", "Credit Card", "São Paulo, SP", 0, now());
 
 ALTER TABLE users ADD FOREIGN KEY (shopping) REFERENCES buy_product(solicitation_id);
+-- mysqldump -u root -p loja_virtual_atacado > /home/aylton/backup.sql
+-- mysql -u root -p teste-restore < /home/aylton/backup.sql
 
 -- Inserir produtos OK
 -- Relacionar imagens aos produtos OK

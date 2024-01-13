@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
 
 import { getStorage } from "firebase/storage";
-
 const firebaseConfig = {
+
   apiKey: "AIzaSyBCIPbd8ejdAoggzgLVJSGzPei_dKl479I",
 
   authDomain: "urban-vogue-br.firebaseapp.com",
@@ -15,7 +15,8 @@ const firebaseConfig = {
 
   appId: "1:812157076861:web:3bd25c7bd04f35d1a8f814",
 
-  measurementId: "G-E1JEYW67EF",
+  measurementId: "G-E1JEYW67EF"
+
 };
 
 

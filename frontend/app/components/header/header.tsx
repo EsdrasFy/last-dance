@@ -20,7 +20,7 @@ interface headerProps {
 async function Header({ href }: headerProps) {
   return (
     <>
-      <header className="flex justify-between items-center bg-custom-grayTwo py-4 px-7 beforeHeader absolute top-0 left-0 w-full z-50">
+      <header className="flex justify-between items-center bg-custom-grayTwo py-4 px-7 beforeEffect afterEffect absolute top-0 left-0 w-full z-50">
         <figure className="flex w-fit gap-3 items-center">
           <Image
             src={logo}

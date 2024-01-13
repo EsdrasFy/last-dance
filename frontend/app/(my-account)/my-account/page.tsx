@@ -42,7 +42,7 @@ async function MyAccount() {
   
   return (
       <section
-        className={`h-screen w-full flex items-start justify-center ${
+        className={`h-screen min-w-full flex items-start justify-center ${
           render && "soft-entry"
         }`}
       >
@@ -69,9 +69,9 @@ async function MyAccount() {
           <div className="z-10 px-12 max-sm:px-5">
             <div className="flex w-full justify-between pb-16 border-b-[2px] border-custom-grayThree/20">
               <div className="flex flex-col -mt-5 ">
-                <figure className="max-w-[120px] flex">
+                <figure className="max-w-[120px] flex mb-4">
                   <Image
-                    src={session?.user.profile_img || ""}
+                    src={session?.user.profile_img || "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg"}
                     alt="user profile"
                     className="w-full object-cover rounded-full border-[6px] border-custom-grayTwo min-w-[115px] min-h-[115px] max-w-[115px] max-h-[115px]"
                     width={115}
@@ -87,7 +87,7 @@ async function MyAccount() {
                   </p>
                   <Link
                     href="/my-account/edit-profile"
-                    className="mt-4  bg-custom-pink/30 py-3 text-base text-custom-textColor font-medium px-10 rounded-md duration-200 transition-all ease-linear hover:bg-custom-pink cursor-pointer"
+                    className="mt-4 bg-custom-pink/30 py-3 text-base text-custom-textColor font-medium px-10 rounded-md duration-200 transition-all ease-linear hover:bg-custom-pink cursor-pointer"
                   >
                     Edit Profille
                   </Link>
@@ -178,7 +178,7 @@ async function MyAccount() {
               </ul>
             </div>
             <div className="flex flex-col w-full pb-10 ">
-              <ul className="flex justify-between text-textColor mt-10">
+              <ul className="flex justify-between text-custom-textColor mt-10">
                 <li className="flex flex-col items-center gap-3 justify-center text-center group">
                   <Link href="#" className="flex items-center flex-col gap-3">
                     <Image

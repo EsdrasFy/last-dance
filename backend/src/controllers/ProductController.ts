@@ -1,8 +1,66 @@
 import Product from "../models/Product";
-import { Op, WhereOptions } from "sequelize";
-import Sequelize from "sequelize/types/sequelize";
+import ProductImages from "../models/ProductImages";
+import { Model, Op, WhereOptions } from "sequelize";
 import * as puppeteer from "puppeteer";
 import { Request, Response } from "express";
+
+const { Translate } = require("@google-cloud/translate").v2;
+require("dotenv").config();
+
+// Your credentials
+const CREDENTIALS = require("../../urban-vogue-410216-e4add7f801f7.json");
+
+// Configuration for the client
+const translate = new Translate({
+  credentials: CREDENTIALS,
+  projectId: CREDENTIALS.project_id,
+});
+
+interface ProductAttributes extends Model<any, any> {
+  id: number;
+  title: string;
+  summary: string;
+  quantidy: number;
+  sold?: number;
+  price: number;
+  state: boolean;
+  category: string;
+  sizes?: string;
+  brand?: string;
+  guarantee?: string;
+  variation?: string;
+  assessment: number;
+  parcelable: boolean;
+  max_installments?: number;
+  interest_rate?: number;
+  updated_at: Date;
+  created_at: Date;
+}
+interface ProductImageAttributes extends Model<any, any> {
+  image_id: number;
+  product_id?: number;
+  url: string;
+}
+interface ProductFlagsAttributes extends Model<any, any> {
+  flags_id: number;
+  product_id?: number;
+  flag: string;
+}
+interface ProductColorsAttributes extends Model<any, any> {
+  color_id: number;
+  product_id?: number;
+  name_color: string;
+}
+interface ProductSizesAttributes extends Model<any, any> {
+  size_id: number;
+  product_id?: number;
+  size: string;
+}
+interface ProductDetailsAttributes extends Model<any, any> {
+  size_id: number;
+  product_id?: number;
+  size: string;
+}
 async function createProduct(req: Request, res: Response) {
   const {
     title,
@@ -165,6 +223,7 @@ async function deleteProduct(req: Request, res: Response) {
 }
 async function filterProducts(req: Request, res: Response) {
   const {
+    search,
     categoria,
     valor_min,
     valor_max,
@@ -235,8 +294,42 @@ async function filterProducts(req: Request, res: Response) {
     };
     const products = await Product.findAll({
       ...options,
+      where: {
+        [Op.or]: [
+          { title: { [Op.like]: `%${search}%` } },
+          { brand: { [Op.like]: `%${search}%` } },
+          { category: { [Op.like]: `%${search}%` } }
+        ],
+      },
+      include: [
+        {
+          model: ProductImage,
+          as: "images",
+          attributes: ["url"],
+        },
+        {
+          model: ProductColor,
+          as: "colors",
+          attributes: ["name_color"],
+        },
+        {
+          model: ProductDetails,
+          as: "details",
+          attributes: ["detail"],
+        },
+        {
+          model: ProductSizes,
+          as: "sizes",
+          attributes: ["size"],
+        },
+        {
+          model: ProductFlags,
+          as: "flags",
+          attributes: ["flag"],
+        },
+      ],
     });
-
+    console.log(products.toString());
     res.status(200).json(products);
   } catch (error) {
     console.error("Erro ao obter produtos:", error);
@@ -246,6 +339,11 @@ async function filterProducts(req: Request, res: Response) {
 
 import * as natural from "natural";
 import axios from "axios";
+import ProductImage from "../models/ProductImages";
+import ProductFlags from "../models/ProductFlags";
+import ProductColor from "../models/ProductColors";
+import ProductSizes from "../models/ProductSizes";
+import ProductDetails from "../models/ProductDetails";
 const tokenizer = new natural.WordTokenizer();
 const stopWords = new Set([
   "em",
@@ -442,7 +540,15 @@ function extrairPalavrasChave(descricao: string): string[] {
 
   return palavrasChave;
 }
-
+const translateText = async (text: string, targetLanguage: string) => {
+  try {
+    let [response] = await translate.translate(text, targetLanguage);
+    return response;
+  } catch (error) {
+    console.log(`Error at translateText --> ${error}`);
+    return 0;
+  }
+};
 async function scraping(req: Request, res: Response) {
   const urlClone = "https://www.posthaus.com.br/";
 
@@ -479,59 +585,99 @@ async function processProductLink(link: string, page: puppeteer.Page) {
   await page.waitForSelector(".llynDC");
   await page.waitForSelector(".rYQsU");
   await page.waitForSelector(".sc-kgoBCf.jeIRcN");
-  const title = await page.$eval(".euhAJe h1", (element) => element.innerHTML);
+  // titulo
+  const OldTitle = await page.$eval(
+    ".euhAJe h1",
+    (element) => element.innerHTML
+  );
+  const title = await translateText(OldTitle, "en");
+  // preço
+  const preco = await page.$eval(".rYQsU", (element) => element.innerHTML);
+  const formattedPrice = parseFloat(
+    preco
+      ?.replace(/&nbsp;|\s|[^\d,.]/g, "")
+      .replace("R$", "")
+      .replace(",", ".") || (Math.random() * (200 - 40) + 40).toFixed(2)
+  );
+
+  // Formatar o preço para ter sempre o formato "99,99" ou "0,99"
+  const price = formattedPrice.toFixed(2);
+
+  // categoria
+  const OldCategory = link.split("/")[4];
+  const OldCategory2 = await translateText(OldCategory, "en");
+      
+  const category = OldCategory2.toLowerCase().replace(/\s+/g, "-");
+
+  console.log(price);
+
+  // marca
+  const brand = link.split("/")[3];
+  // tamanhos
   const sizes = await page.$$eval(".llynDC", (el) =>
     el.map((size) => size.innerHTML)
   );
   const regex: RegExp = /\s(\d+)x/i;
-  const preco = await page.$eval(".rYQsU", (element) => element.innerHTML);
-  const price = parseFloat(
-    preco
-      ?.replace(/&nbsp;|\s|[^\d,.]/g, "")
-      .replace("R$", "")
-      .replace(",", ".") || "0"
-  );
-
-  const brand = link.split("/")[3];
-  const category = link.split("/")[4];
-  const summary = await page.$eval(
+  // descrição
+  const OldSummary = await page.$eval(
     ".jBoZhA > .jPWGbB > .gHwVao",
     (element) => element.innerHTML
   );
-  const palavrasChave: string[] = extrairPalavrasChave(summary);
-
-  const flags = palavrasChave.unshift(brand, category);
-
+  const summary = await translateText(OldSummary, "en");
+  // palavras chaves
+  const flags: string[] = extrairPalavrasChave(summary);
+  flags.push(brand, category);
+  // imagens
   const images = await page.$$eval(".eMQuAB > img", (el) =>
     el.map((img) => img.src)
   );
-  const details = await page.$$eval(".sc-kgoBCf.jeIRcN", (el) =>
+  // detalhes
+  const detailsPT = await page.$$eval(".sc-kgoBCf.jeIRcN", (el) =>
     el.map((p) => p.innerHTML)
   );
 
+  let details: string[] = [];
+
+  for (const detail of detailsPT) {
+    const detailEN = await translateText(detail, "en");
+    details.push(detailEN);
+  }
+
+  // cores
   const getColorName = await page.$$eval(
     "#colorSelectorRadioBullet_link > span",
     (el) => el.map((name) => name.innerHTML)
   );
-
-  const colors = getColorName ? getColorName : [];
+  const colorsPT = getColorName ? getColorName : [];
+  let colors: string[] = [];
+  for (const colorPT of colorsPT) {
+    const colorEN = await translateText(colorPT, "en");
+    colorEN.toLowerCase()
+    colors.push(colorEN);
+  }
+  // preço com desconto
   const getPriceDiscont = await page.$$eval(
     ".LSdgo .daKbcm.sc-ebFjAB.sc-dliRfk label",
     (el) => el.map((elemento) => elemento.innerHTML)
   );
   const cleanPriceDiscont = getPriceDiscont ? getPriceDiscont : [];
+  // pegar o valor com desconto
   const priceDiscont: string[] = cleanPriceDiscont
     .map((element) => element.replace(/&nbsp;|\s/g, ""))
     .filter((element) => element.trim() !== "");
-
-  const parcelable = priceDiscont.some((element) => element.includes("x"));
-  const match: string | undefined = priceDiscont.find((element) =>
-    regex.test(element)
+  // ver se é parcelavel
+  const parcelableLabels = priceDiscont.filter((element) =>
+    element.includes("x")
   );
 
-  const max_installments: number = match
-    ? parseInt(match.match(regex)![1], 10)
+  const parcelable = parcelableLabels.length > 0;
+
+  // parcelas
+
+  const max_installments: number = parcelable
+    ? parseInt(parcelableLabels[0].replace("x", ""), 10)
     : 1;
+
   const obj = {
     title,
     price,
@@ -542,7 +688,6 @@ async function processProductLink(link: string, page: puppeteer.Page) {
     images,
     summary,
     sizes,
-    palavrasChave,
     details,
     colors,
     brand,
@@ -552,44 +697,102 @@ async function processProductLink(link: string, page: puppeteer.Page) {
 }
 
 async function createProductInDatabase(productInfo: any) {
-  const {title,
+  const {
+    title,
     price,
     parcelable,
     max_installments,
-    priceDiscont,
     flags,
     images,
     summary,
     sizes,
-    palavrasChave,
     details,
     colors,
     brand,
-    category} = productInfo
+    category,
+  } = productInfo;
+  console.log(details);
+
   try {
     const quantity = Math.floor(Math.random() * 100) + 1;
     const sold = Math.floor(Math.random() * 200);
     console.log(sold, quantity);
 
     const assessment = Math.floor(Math.random() * 5) + 1;
-    const sizesAsString = sizes.join(", ");
-    const product = await Product.create({
+
+    const product = (await Product.create({
       title: title,
       summary: summary,
-      quantidy: 2,
-      sold: 2,
+      quantidy: quantity,
+      sold: sold,
       price: price,
       state: true,
       category: category,
-      sizes: sizesAsString,/*gamb*/
       brand: brand,
       guarantee: "Warranty: 3 months of coverage by Urban Vogue.",
-      variation: "sem variação",/*retirar*/
-      assessment: 4.5,/* add qtd de avaliações ou padrao de 10*/
+      assessment: assessment,
+      qtd_assessment: 10,
       parcelable: parcelable,
       max_installments: max_installments,
       interest_rate: 23.0,
-    });
+    })) as ProductAttributes;
+    if (!product) {
+      throw new Error("Erro na criação do produto");
+    }
+    for (const url of images) {
+      const imageCreate = (await ProductImage.create({
+        product_id: product.id,
+        url: url,
+      })) as ProductImageAttributes;
+      if (!imageCreate) {
+        throw new Error("Erro na criação da imagem");
+      }
+      console.log("imagem criada");
+    }
+    for (const flag of flags) {
+      const flagCreate = (await ProductFlags.create({
+        product_id: product.id,
+        flag: flag,
+      })) as ProductFlagsAttributes;
+
+      if (!flagCreate) {
+        throw new Error("Erro na criação da flag");
+      }
+      console.log("flag criada");
+    }
+    for (const color of colors) {
+      const colorCreate = (await ProductColor.create({
+        product_id: product.id,
+        name_color: color,
+      })) as ProductColorsAttributes;
+
+      if (!colorCreate) {
+        throw new Error("Erro na criação da imagem");
+      }
+      console.log("cor criada");
+    }
+    for (const size of sizes) {
+      const sizeCreate = (await ProductSizes.create({
+        product_id: product.id,
+        size: size,
+      })) as ProductSizesAttributes;
+
+      if (!sizeCreate) {
+        throw new Error("Erro na criação da imagem");
+      }
+      console.log("size criada");
+    }
+    for (const detail of details) {
+      const detailCreate = (await ProductDetails.create({
+        product_id: product.id,
+        detail: detail,
+      })) as ProductDetailsAttributes;
+
+      if (!detailCreate) {
+        throw new Error("Erro na criação da imagem");
+      }
+      console.log("detail criada");
+    }
     /*rever videos sobre relação de tabela e mudar o schema talvez*/
     console.log("produto adicionado");
   } catch (error) {

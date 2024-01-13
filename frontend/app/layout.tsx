@@ -5,6 +5,8 @@ import Header from "@/app/components/header/header";
 import NextAuthSessionProvider from "./providers/sessionProvider";
 import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "./api/auth/[...nextauth]/route";
+import ProductQuery from "./api/ProductQuery";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

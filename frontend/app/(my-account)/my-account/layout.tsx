@@ -15,5 +15,5 @@ export default async function AccountLayout({
     redirect("/login");
   }
   console.log(session);
-  return <>{children}</>;
+  return <div className="w-full">{children}</div>;
 }

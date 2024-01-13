@@ -15,7 +15,7 @@ async function LoginLayout({ children }: LoginLayoutProps) {
 
   return (
     <ChakraProvider>
-      <>{children}</>;
+      <>{children}</>
     </ChakraProvider>
   );
 }
