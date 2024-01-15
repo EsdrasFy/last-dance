@@ -99,7 +99,7 @@ CREATE TABLE product (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL,
     created_at DATETIME DEFAULT NOW() NOT NULL
 );
-select max_installments from product;
+select * from product;
 CREATE TABLE product_images (
     image_id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT,
@@ -166,8 +166,9 @@ ALTER TABLE users
 DROP COLUMN classe;
 
 */
-
 select * from product;
+
+select * from product_flags;
 describe product;
 
 -- INSERT INTO product_images (product_id, url)

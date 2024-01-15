@@ -35,7 +35,7 @@ interface Image {
     createdAt: string;
     updatedAt: string;
     images: Image[];
-    colors: string[]; // Se houver um array de cores, ajuste conforme necessário
+    colors: string[];
     details: Detail[];
     sizes: Size[];
     flags: Flag[];

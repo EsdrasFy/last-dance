@@ -47,8 +47,8 @@ export default routes;
     offset: O número de produtos a serem pulados na busca (opcional, padrão 0)
     order_by: O campo e a direção de ordenação dos produtos, separados por dois pontos (opcional, padrão sem ordenação)
     limit: O número máximo de produtos a serem retornados na busca (opcional, padrão 10)
-
-Exemplos de rotas:
+    search: Pesquisa por palavra em categoria, brand, title(tentar fazer procurar tbm em outras tabelas relacionadas)
+ Exemplos de rotas:
 
     Para buscar todos os produtos: https://example.com/produtos
     Para buscar produtos da categoria “calçados” com preço entre 100 e 200 reais: https://example.com/produtos?categoria=calçados&valor_min=100&valor_max=200

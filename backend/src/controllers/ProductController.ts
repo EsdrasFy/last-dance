@@ -292,15 +292,22 @@ async function filterProducts(req: Request, res: Response) {
       limit: typeof limit === "string" ? parseInt(limit, 10) : 10,
       order: order.length > 0 ? [...order] : [],
     };
-    const products = await Product.findAll({
-      ...options,
-      where: {
+    if (typeof search === "string") {
+      console.log(" AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      console.log(search);
+      
+
+      options.where = {
         [Op.or]: [
           { title: { [Op.like]: `%${search}%` } },
           { brand: { [Op.like]: `%${search}%` } },
           { category: { [Op.like]: `%${search}%` } }
         ],
-      },
+      };
+    }
+
+    const products = await Product.findAll({
+      ...options,
       include: [
         {
           model: ProductImage,
