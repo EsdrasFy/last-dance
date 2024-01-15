@@ -1,4 +1,3 @@
-"use client";
 import NavbarHome from "@/app/components/navbarHome/navbarHome";
 import SearchInput from "@/app/components/ui/searchInput";
 import Image from "next/image";
@@ -7,43 +6,9 @@ import Model1 from "@/app/assets/model1.webp";
 import Model2 from "@/app/assets/model2.webp";
 import Model3 from "@/app/assets/model3.webp";
 import Model4 from "@/app/assets/model4.webp";
-import { useState, useEffect } from "react";
-import { SlArrowLeft, SlArrowRight } from "react-icons/sl";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Mousewheel, Keyboard } from "swiper/modules";
-import { Suspense } from "react";
-import CardSlide from "@/app/components/ui/carrosel/cardSlide";
-import ProductQuery from "@/app/api/ProductQuery";
-import Card from "@/app/interfaces/Card";
-
-
-function Loading() {
-  return <div>Carregando...</div>;
-}
+import CarrosselShop from "@/app/components/ui/carrosel/carrosselShop";
 
 function Shop() {
-  const [data, setData] = useState<Card[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<unknown | null>(null); // Ajuste o tipo para 'unknown | null'
-  const query = "search=quintess";
-  const category = "teste";
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true)
-        const result: any = await ProductQuery(query);
-        setData(result.data);
-        console.log(result);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [query]);
 
   return (
     <main className="flex mx-10 min-h-screen max-w-[1050px] w-full px-10 flex-col items-center mt-24 max-md:mx-8">
@@ -96,46 +61,7 @@ function Shop() {
           />
         </div>{" "}
       </section>
-      <section className={`relative w-full pt-10 pb-14`}>
-        <h3 className="font-extralight text-2xl text-custom-textColor mb-4">
-          {category}
-        </h3>
-
-        <Swiper
-          slidesPerView={5}
-          loop={true}
-          spaceBetween={24}
-          keyboard={true}
-          mousewheel={true}
-          navigation={{
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-          }}
-          modules={[Pagination, Navigation, Mousewheel, Keyboard]}
-          className="mySwiper overflow-x-hidden flex justify-center items-center overflow-hidden"
-        >
-          <Suspense fallback={<Loading/>}>
-          {
-            data.map((card: Card) => (
-
-              <SwiperSlide
-                key={card.id}
-                className="shadow-snipped custom-slide flex flex-col bg-custom-grayTwo"
-                >
-                <CardSlide data={card} />
-              </SwiperSlide>
-            ))
-            }
-            </Suspense>
-
-          <div className="swiper-button-prev absolute top-1/2 cursor-pointer -translate-y-1/2 -left-[6%] hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear rounded-md py-5 flex items-center justify-center">
-            <SlArrowLeft className="text-5xl text-custom-pink" />
-          </div>
-          <div className="swiper-button-next absolute top-1/2 cursor-pointer -translate-y-1/2 -right-[6%] hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear rounded-md py-5 flex items-center justify-center">
-            <SlArrowRight className="text-5xl text-custom-pink" />
-          </div>
-        </Swiper>
-      </section>
+     <CarrosselShop query="" category=""/>
     </main>
   );
 }
