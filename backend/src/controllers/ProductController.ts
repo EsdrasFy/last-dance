@@ -223,6 +223,7 @@ async function deleteProduct(req: Request, res: Response) {
 }
 async function filterProducts(req: Request, res: Response) {
   const {
+    id,
     search,
     categoria,
     valor_min,
@@ -243,6 +244,9 @@ async function filterProducts(req: Request, res: Response) {
     }
     if (state) {
       where.state = state;
+    }
+    if(id){
+      where.id = id
     }
     if (avaliacao_min) {
       where.assessment = { [Op.gte]: avaliacao_min };

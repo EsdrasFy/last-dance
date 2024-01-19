@@ -13,6 +13,9 @@ interface Image {
   interface Flag {
     flag: string;
   }
+  interface Color {
+    name_color: string;
+  }
   
   interface Card {
     id: number;
@@ -35,7 +38,7 @@ interface Image {
     createdAt: string;
     updatedAt: string;
     images: Image[];
-    colors: string[]; // Se houver um array de cores, ajuste conforme necessário
+    colors: Color[];
     details: Detail[];
     sizes: Size[];
     flags: Flag[];

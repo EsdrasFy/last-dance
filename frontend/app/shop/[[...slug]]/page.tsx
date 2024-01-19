@@ -16,7 +16,7 @@ function Shop() {
         <SearchInput classname="min-md:hidden w-full" />
       </aside>
       <NavbarHome />
-      <section className="w-full flex h-96 gap-6 mt-4 max-md:hidden font-extralight">
+      <section className="w-full flex h-96 gap-6 mt-4 max-md:hidden font-thin-inter font-in">
         {" "}
         <div className="shadow-snipped bg-custom-grayTwo text-custom-textColor w-1/4 flex items-center uppercase group duration-300 transition-all ease-linear overflow-x-hidden">
           <Image
@@ -61,7 +61,7 @@ function Shop() {
           />
         </div>{" "}
       </section>
-     <CarrosselShop query="" category=""/>
+     <CarrosselShop query="order_by=created_at:desc" category="NEWS"/>
     </main>
   );
 }
