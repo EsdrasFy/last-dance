@@ -22,26 +22,33 @@ import {
 import ProductQuery from "@/app/api/ProductQuery";
 import Card from "@/app/interfaces/Card";
 import { ContextApp } from "@/app/contexts/ContextApp";
+import ProductsById from "@/app/api/ProductsById";
 
 type Inputs = {
   cep: string;
 };
 
-interface ApiResponse {
-  data: Card[];
-  status: number;
-}
 
 const schema = yup.object().shape({
   cep: yup.string().required("This field is required!"),
 });
 
-interface Product {
+interface ProductCart {
   id: number;
   quantity: number;
   price: number;
   size?: string;
   color?: string;
+}
+
+interface ApiResponse {
+  data: ProductResponse | any[];
+  status: number;
+}
+
+interface ProductResponse {
+  products: Card[];
+  notFoundIds: number[];
 }
 
 function Page({ params }: any) {
@@ -63,47 +70,46 @@ function Page({ params }: any) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const query = "id=" + params.slug[0];
+      const query = params.slug[0];
+  
       try {
-        const res: ApiResponse | undefined = await ProductQuery(query);
+        const res: ApiResponse | undefined = await ProductsById(query);
         if (res?.status === 200) {
-          const { price, images, sizes, colors } = res.data[0];
-
-          if (price) {
-            const priceValue = parseFloat(price);
-            setPrice(priceValue);
-
-            const installment = (priceValue / 6).toFixed(2);
-            console.log(installment);
-
-            setInstallment(parseFloat(installment));
+          if ('products' in res.data) {
+            const { price, images, sizes, colors } = res.data.products[0];
+            if (price) {
+              const priceValue = parseFloat(price);
+              setPrice(priceValue);
+  
+              const installment = (priceValue / 6).toFixed(2);
+              setInstallment(parseFloat(installment));
+            }
+  
+            if (images?.length > 0) {
+              setSelectImage(images[0].url);
+            }
+            if (sizes?.length > 0) {
+              setSelectSize(sizes[0].size);
+            }
+            if (colors?.length > 0) {
+              setSelectColor(colors[0].name_color);
+            }
+  
+            setDataCard(res.data.products[0]);
+          } else {
+            console.error("Resposta da requisição não contém dados esperados.");
           }
-
-          if (images?.length > 0) {
-            setSelectImage(images[0].url);
-          }
-          if (sizes?.length > 0) {
-            setSelectSize(sizes[0].size);
-            console.log(sizes);
-          }
-          if (colors?.length > 0) {
-            console.log(sizes);
-            setSelectColor(colors[0].name_color);
-          }
-
-          setDataCard(res.data[0]);
         } else {
-          console.error(
-            "Resposta da requisição é undefined ou não contém dados."
-          );
+          console.error("Resposta da requisição é undefined ou não contém dados.");
         }
       } catch (error) {
         console.error("Erro na requisição do produto:", error);
       }
     };
-
+  
     fetchData();
-  }, [params.slug[0]]);
+  }, [params.slug]);
+
 
   const handleAddItem = () => {
     const data = {
@@ -115,7 +121,7 @@ function Page({ params }: any) {
     };
 
     if (dataCard?.id) {
-      addItemToCart(data as Product);
+      addItemToCart(data as ProductCart);
       console.log("Item added to cart!");
     }
   };
@@ -228,12 +234,12 @@ function Page({ params }: any) {
           </div>
           <div className="flex gap-8 mt-4 items-center">
             <div>
-              <p className="text-3xl text-custom-pink">$ {price}</p>
+              <p className="text-3xl text-custom-pink">$ {price.toFixed(2)}</p>
             </div>
             <div> or </div>
             <div>
               <p className="text-base text-custom-textColor/60">
-                6x of {installment}
+                6x of {installment?.toFixed(2)}
               </p>
             </div>
           </div>
@@ -319,7 +325,6 @@ function Page({ params }: any) {
                   id="decrement-button"
                   data-input-counter-decrement="counter-input"
                   className="flex-shrink-0 shadow-snipped bg-custom-grayTwo hover:bg-custom-grayOne duration-300 ease-linear inline-flex items-center justify-center border border-custom-pink h-7 w-7 focus:ring-custom-pink dark:focus:ring-gray-700 focus:ring-1 focus:outline-none rounded-full"
-
                 >
                   <svg
                     className="w-3.5 h-3.5 text-custom-pink dark:text-white"

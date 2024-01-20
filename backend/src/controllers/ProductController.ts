@@ -3,6 +3,14 @@ import ProductImages from "../models/ProductImages";
 import { Model, Op, WhereOptions } from "sequelize";
 import * as puppeteer from "puppeteer";
 import { Request, Response } from "express";
+import * as natural from "natural";
+import axios from "axios";
+import ProductImage from "../models/ProductImages";
+import ProductFlags from "../models/ProductFlags";
+import ProductColor from "../models/ProductColors";
+import ProductSizes from "../models/ProductSizes";
+import ProductDetails from "../models/ProductDetails";
+import Card from "../interfaces/Card";
 
 const { Translate } = require("@google-cloud/translate").v2;
 require("dotenv").config();
@@ -245,8 +253,8 @@ async function filterProducts(req: Request, res: Response) {
     if (state) {
       where.state = state;
     }
-    if(id){
-      where.id = id
+    if (id) {
+      where.id = id;
     }
     if (avaliacao_min) {
       where.assessment = { [Op.gte]: avaliacao_min };
@@ -299,13 +307,12 @@ async function filterProducts(req: Request, res: Response) {
     if (typeof search === "string") {
       console.log(" AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
       console.log(search);
-      
 
       options.where = {
         [Op.or]: [
           { title: { [Op.like]: `%${search}%` } },
           { brand: { [Op.like]: `%${search}%` } },
-          { category: { [Op.like]: `%${search}%` } }
+          { category: { [Op.like]: `%${search}%` } },
         ],
       };
     }
@@ -347,14 +354,64 @@ async function filterProducts(req: Request, res: Response) {
     res.status(500).json({ error: "Erro ao obter produtos" });
   }
 }
+async function productsById(req: Request, res: Response) {
+  const { ids } = req.params;
+  if(!ids){
+    res.status(404).json({msg: "Need id!"})
+  }
+  let intIds: number[] = ids.split("&").map((id) => parseInt(id, 10));
+  
+  try {
+   
+    const products = await Product.findAll({ 
+      where:{
+        id:intIds
+      },
+      include: [
+        {
+          model: ProductImage,
+          as: "images",
+          attributes: ["url"],
+        },
+        {
+          model: ProductColor,
+          as: "colors",
+          attributes: ["name_color"],
+        },
+        {
+          model: ProductDetails,
+          as: "details",
+          attributes: ["detail"],
+        },
+        {
+          model: ProductSizes,
+          as: "sizes",
+          attributes: ["size"],
+        },
+        {
+          model: ProductFlags,
+          as: "flags",
+          attributes: ["flag"],
+        },
+      ],
+    });
+    const foundIds = products.map((product:any ) => product.id);
+    const notFoundIds = intIds.filter((id) => !foundIds.includes(id));
 
-import * as natural from "natural";
-import axios from "axios";
-import ProductImage from "../models/ProductImages";
-import ProductFlags from "../models/ProductFlags";
-import ProductColor from "../models/ProductColors";
-import ProductSizes from "../models/ProductSizes";
-import ProductDetails from "../models/ProductDetails";
+    // Criar resposta personalizada
+    const response = {
+      products,
+      notFoundIds,
+    };
+
+    res.status(200).json(response);
+
+  } catch (error) {
+    console.error("Erro ao obter produtos:", error);
+    res.status(500).json({ error: "Erro ao obter produtos" });
+  }
+}
+
 const tokenizer = new natural.WordTokenizer();
 const stopWords = new Set([
   "em",
@@ -617,7 +674,7 @@ async function processProductLink(link: string, page: puppeteer.Page) {
   // categoria
   const OldCategory = link.split("/")[4];
   const OldCategory2 = await translateText(OldCategory, "en");
-      
+
   const category = OldCategory2.toLowerCase().replace(/\s+/g, "-");
 
   console.log(price);
@@ -663,7 +720,7 @@ async function processProductLink(link: string, page: puppeteer.Page) {
   let colors: string[] = [];
   for (const colorPT of colorsPT) {
     const colorEN = await translateText(colorPT, "en");
-    colorEN.toLowerCase()
+    colorEN.toLowerCase();
     colors.push(colorEN);
   }
   // preço com desconto
@@ -815,5 +872,6 @@ export default {
   updateProduct,
   deleteProduct,
   filterProducts,
+  productsById,
   scraping,
 };

@@ -31,6 +31,7 @@ interface AppContextProps {
   cartSummary: CartSummary | undefined;
   setCartSummary: React.Dispatch<React.SetStateAction<CartSummary | undefined>>;
   addItemToCart: (data: Product) => void;
+  removeItemFromCart: (id: number) => void;
   disclosure: UseDisclosureReturn;
   disclosureFav: UseDisclosureReturn;
 }
@@ -48,10 +49,10 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   
   const calculateCartSummary = (cartItems: Product[]): CartSummary => {
     const { totalPrice, totalQuantity } = cartItems.reduce(
-      (acc, item) => {
+      (acc, { price, quantity }) => {
         return {
-          totalPrice: item.price * item.quantity + acc.totalPrice,
-          totalQuantity: item.quantity + acc.totalQuantity,
+          totalPrice: price * quantity + acc.totalPrice,
+          totalQuantity: quantity + acc.totalQuantity,
         };
       },
       { totalPrice: 0, totalQuantity: 0 }
@@ -65,12 +66,15 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   };
   
   useEffect(() => {
-    const getArray = JSON.parse(localStorage.getItem("MyCart") || "null") as Product[];
-    if (getArray) {
-      setProductsCart(getArray);
-      setCartSummary(calculateCartSummary(getArray));
+    const storedCart = localStorage.getItem("MyCart");
+    if (storedCart) {
+      const cartItems = JSON.parse(storedCart) as Product[];
+      setProductsCart(cartItems);
+      setCartSummary(calculateCartSummary(cartItems));
     } else {
-      localStorage.setItem("MyCart", JSON.stringify(productsCart));
+      // Se o carrinho estiver vazio, inicialize com um array vazio
+      setProductsCart([]);
+      setCartSummary({ totalPrice: 0, totalQuantity: 0, products: [] });
     }
   }, [/* Dependências conforme necessário */]);
   
@@ -98,6 +102,14 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     localStorage.setItem("MyCart", JSON.stringify(updatedCart));
     setCartSummary(calculateCartSummary(updatedCart));
   };
+
+  const removeItemFromCart = (id: number) => {
+    const updatedCart = productsCart.filter((item) => item.id !== id);
+    setProductsCart(updatedCart);
+    localStorage.setItem("MyCart", JSON.stringify(updatedCart));
+    setCartSummary(calculateCartSummary(updatedCart));
+  };
+
   const contextValue: AppContextProps = {
     searchValue,
     setSearchValue,
@@ -107,6 +119,7 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     setTotalQuant,
     filteredProducts,
     setFilteredProducts,
+    removeItemFromCart,
     addItemToCart,
     disclosure,
     disclosureFav,

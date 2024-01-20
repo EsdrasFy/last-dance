@@ -31,6 +31,7 @@ routes.post("/product/new", ProductController.createProduct);
 routes.put("/product/update", ProductController.updateProduct);
 routes.delete("/product/delete/:id", ProductController.deleteProduct);
 routes.get("/product/filter", ProductController.filterProducts);
+routes.get("/product/:ids", ProductController.productsById);
 routes.get("/scraping/:content", ProductController.scraping);
 
 export default routes;

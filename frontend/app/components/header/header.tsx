@@ -14,8 +14,6 @@ interface headerProps {
 }
 
 async function Header({ href }: headerProps) {
-console.log(href);
-
   return (
     <>
       <header className="flex justify-between items-center bg-custom-grayTwo py-4 px-7 beforeEffect afterEffect absolute top-0 left-0 w-full z-50">
