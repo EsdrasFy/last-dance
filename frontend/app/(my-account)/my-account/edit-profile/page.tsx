@@ -1,12 +1,10 @@
 "use client";
-import ButtonPass from "@/app/components/ui/buttonPass";
 import InputUi from "@/app/components/ui/InputDefault/input";
 import React, { useState, ChangeEvent } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import LogoProfile from "@/app/assets/krgkuf4j.bmp";
 import { storage } from "@/app/api/Firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useSession } from "next-auth/react";
