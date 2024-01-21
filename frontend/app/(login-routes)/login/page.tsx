@@ -64,6 +64,7 @@ function Login() {
       console.log(result?.status);
       if (result?.status === 500) {
         setErrorLogin("Error in server, please try again!");
+        
       }
     } catch (error) {
       throw new Error("Erro ao buscar usuario");

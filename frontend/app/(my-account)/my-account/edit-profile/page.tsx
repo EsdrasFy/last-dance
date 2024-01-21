@@ -63,16 +63,16 @@ const schema = yup.object().shape({
       return value && value <= cutoffDate;
     }),
 });
-interface PageProps {
-  sessionUser: any;
-}
-function Page({ sessionUser }: PageProps) {
+
+function Page() {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [success, setSuccess] = useState<number>();
   const [errorMsg, setErrorMsg] = useState<string>();
   const [progress, setProgress] = useState(0);
   const { data: session, status, update } = useSession();
+
+  
   const [imgUrl, setImgUrl] = useState(
     session?.user.profile_img ||
       "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg"
