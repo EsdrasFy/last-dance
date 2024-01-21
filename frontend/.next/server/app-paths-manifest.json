@@ -1,4 +1,17 @@
 {
+  "/_not-found": "app/_not-found.js",
+  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/page": "app/page.js",
+  "/register/page": "app/register/page.js",
   "/shop/[[...slug]]/page": "app/shop/[[...slug]]/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js"
+  "/(login-routes)/login/page": "app/(login-routes)/login/page.js",
+  "/(my-account)/my-account/messages/page": "app/(my-account)/my-account/messages/page.js",
+  "/(my-account)/my-account/overview/page": "app/(my-account)/my-account/overview/page.js",
+  "/(my-account)/my-account/payments/page": "app/(my-account)/my-account/payments/page.js",
+  "/(my-account)/my-account/requests/page": "app/(my-account)/my-account/requests/page.js",
+  "/(my-account)/my-account/settings/page": "app/(my-account)/my-account/settings/page.js",
+  "/(my-account)/my-account/page": "app/(my-account)/my-account/page.js",
+  "/(my-account)/my-account/edit-profile/page": "app/(my-account)/my-account/edit-profile/page.js",
+  "/shop/product/[...slug]/page": "app/shop/product/[...slug]/page.js"
 }

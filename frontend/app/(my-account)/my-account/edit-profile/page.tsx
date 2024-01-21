@@ -66,7 +66,7 @@ const schema = yup.object().shape({
 interface EditProfile {
   sessionUser: any;
 }
-function page({ sessionUser }: EditProfile) {
+function EditProfile({ sessionUser }: EditProfile) {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [success, setSuccess] = useState<number>();
@@ -378,4 +378,4 @@ function page({ sessionUser }: EditProfile) {
     </>
   );
 }
-export default page;
+export default EditProfile;
