@@ -27,7 +27,7 @@ import { useSession } from "next-auth/react";
 import ButtonValueWallet from "@/app/components/ui/buttonValueWallet";
 import Teste from "@/app/components/teste";
 
-async function MyAccount() {
+async function Page() {
   const [render, setRender] = useState(false);
 
   useEffect(() => {
@@ -238,13 +238,4 @@ async function MyAccount() {
   );
 }
 
-export default MyAccount;
-export const session = {
-  strategy: "jwt",
-};
-export interface User {
-  id: string | number;
-  fullname: string;
-  username: string;
-  email: string;
-}
+export default Page;
