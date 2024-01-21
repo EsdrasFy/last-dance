@@ -14,6 +14,8 @@ const nextAuthOptions: NextAuthOptions = {
       },
 
       async authorize(credentials, req) {
+        console.log("authorize chamado");
+
         const response = await fetch("http://localhost:9090/req/login", {
           method: "POST",
           headers: {
@@ -25,9 +27,15 @@ const nextAuthOptions: NextAuthOptions = {
             redirect: false,
           }),
         });
+        console.log("response api login");
+        console.log(response);
 
         const user = await response.json();
         if (user && response.ok) {
+          console.log("user");
+
+          console.log(user);
+
           return user;
         }
 
@@ -43,18 +51,15 @@ const nextAuthOptions: NextAuthOptions = {
       user && (token.user = user);
       return token;
     },
-    async session({ session, token ,}) {
+    async session({ session, token }) {
       session = token.user as any;
+      const id = session.user.user_id;
+      const url = `http://localhost:9090/show/${id}`;
 
-      // If user is logged, we refresh his session
-     
-        const id = session.user.user_id;
-        const url = `http://localhost:9090/show/${id}`;
-
-        let apiResp = await axios.get(url, {});
-        session.user = apiResp.data.user as any;
-        console.log("atualizou")
-        console.log(apiResp.data)
+      let apiResp = await axios.get(url, {});
+      session.user = apiResp.data.user as any;
+      console.log("atualizou");
+      console.log(apiResp.data);
 
       return session;
     },
