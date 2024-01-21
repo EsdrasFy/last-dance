@@ -359,7 +359,7 @@ async function forgotPassword(req: Request, res: Response) {
       httpOnly: true,
       maxAge: 15 * 60 * 1000,
       secure: true,
-      domain: "localhost",
+      domain: "urban-vogue.vercel.app",
       sameSite: "lax",
     });
     console.log(code);
