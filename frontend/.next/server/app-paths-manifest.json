@@ -12,6 +12,6 @@
   "/(my-account)/my-account/requests/page": "app/(my-account)/my-account/requests/page.js",
   "/(my-account)/my-account/settings/page": "app/(my-account)/my-account/settings/page.js",
   "/(my-account)/my-account/page": "app/(my-account)/my-account/page.js",
-  "/shop/product/[...slug]/page": "app/shop/product/[...slug]/page.js",
-  "/(my-account)/my-account/edit-profile/page": "app/(my-account)/my-account/edit-profile/page.js"
+  "/(my-account)/my-account/edit-profile/page": "app/(my-account)/my-account/edit-profile/page.js",
+  "/shop/product/[...slug]/page": "app/shop/product/[...slug]/page.js"
 }

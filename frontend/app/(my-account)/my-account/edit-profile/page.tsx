@@ -63,10 +63,10 @@ const schema = yup.object().shape({
       return value && value <= cutoffDate;
     }),
 });
-interface EditProfile {
+interface EditProfileProps {
   sessionUser: any;
 }
-export default function EditProfile({ sessionUser }: EditProfile) {
+const EditProfile: React.FC<EditProfileProps> = ({ sessionUser }) => {
   const [loading, setLoading] = useState(false);
   const [show, setShow] = useState(false);
   const [success, setSuccess] = useState<number>();
@@ -378,3 +378,4 @@ export default function EditProfile({ sessionUser }: EditProfile) {
     </>
   );
 }
+export default EditProfile;
