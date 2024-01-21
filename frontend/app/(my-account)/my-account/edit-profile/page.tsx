@@ -1,253 +1,381 @@
 "use client";
-import React, { RefObject, useEffect, useRef, useState } from "react";
-
-import {
-  IoMdNotifications,
-  IoMdSettings,
-  IoMdEye,
-  IoMdEyeOff,
-} from "react-icons/io";
-import { Suspense } from "react";
-import { IoGiftOutline, IoWalletOutline } from "react-icons/io5";
-import { BiSolidOffer, BiSupport } from "react-icons/bi";
-import LogoProfile from "@/app/assets/krgkuf4j.bmp";
+import ButtonPass from "@/app/components/ui/buttonPass";
+import InputUi from "@/app/components/ui/InputDefault/input";
+import React, { useState, ChangeEvent } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
-import Checkout from "@/app/assets/icons/check-out.png";
-import Status from "@/app/assets/icons/delivery-status.png";
-import Send from "@/app/assets/icons/delivery-truck.png";
-import Package from "@/app/assets/icons/package.png";
-import Wallet from "@/app/assets/icons/carteira.png";
-import Coupon from "@/app/assets/icons/cupom.png";
-import Gift from "@/app/assets/icons/presente.png";
-import Support from "@/app/assets/icons/apoio-suporte.png";
-import { RiCoupon3Line } from "react-icons/ri";
-import Link from "next/link";
-import NotifyBall from "@/app/components/ui/notifyBall";
+import LogoProfile from "@/app/assets/krgkuf4j.bmp";
+import { storage } from "@/app/api/Firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { useSession } from "next-auth/react";
-import ButtonValueWallet from "@/app/components/ui/buttonValueWallet";
-import Teste from "@/app/components/teste";
+import { MdOutlinePhotoCameraBack } from "react-icons/md";
+import UpdateUser from "@/app/api/UpdateUser";
+import { useRouter } from "next/navigation";
+import { ImSpinner9 } from "react-icons/im";
+import ModalStatus from "@/app/components/ModalStatus";
 
-async function Page() {
-  const [render, setRender] = useState(false);
-
-  useEffect(() => {
-    setRender(true);
-  }, []);
-
-  const { data: session, status } = useSession();
-  if (status === "loading") {
-    return console.log("loading" + session);
-  }
-
-  return (
-    <section
-      className={`h-screen min-w-full flex items-start justify-center ${
-        render && "soft-entry"
-      }`}
-    >
-      <main className=" max-w-[900px] w-full mx-8 bg-grayOne flex  shadow-snipped relative h-fit  flex-col mt-36 max-md:mt-28">
-        <span
-          className="absolute left-0 w-full h-24
-         bg-custom-grayThree"
-        ></span>
-        <aside className="z-10 flex w-full h-fit justify-end">
-          <ul className="flex gap-6 mt-4 mr-4">
-            <li className="relative">
-              <button>
-                <IoMdNotifications className="pointer text-3xl text-custom-textColor " />
-                <NotifyBall />
-              </button>
-            </li>
-            <li className="cursor-pointer">
-              <Link href="/my-account/settings" className="cursor-pointer">
-                <IoMdSettings className="pointer text-3xl text-custom-textColor " />
-              </Link>
-            </li>
-          </ul>
-        </aside>
-        <div className="z-10 px-12 max-sm:px-2">
-          <div className="flex w-full justify-between pb-16 border-b-[2px] border-custom-grayThree/20 max-sm:pb-6 max-sm:flex-wrap">
-            <div className="flex flex-col -mt-5 ">
-              <figure className="max-w-[120px] flex mb-4">
-                <Image
-                  src={
-                    session?.user.profile_img ||
-                    "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg"
-                  }
-                  alt="user profile"
-                  className="w-full object-cover rounded-full border-[6px] border-solid border-custom-grayOne min-w-[115px] min-h-[115px] max-w-[115px] max-h-[115px]"
-                  width={115}
-                  height={115}
-                />
-              </figure>
-              <div className="flex flex-col gap-3 items-start">
-                <h3 className="text-2xl text-custom-textColor max-sm:text-xl">
-                  {session?.user?.fullname}
-                </h3>
-                <p className="text-xl text-custom-textColor max-sm:text-sm">
-                  {session?.user?.email}
-                </p>
-                <Link
-                  href="/my-account/edit-profile"
-                  className="mt-4 bg-custom-pink/30 py-3 text-base text-custom-textColor font-medium px-10 rounded-md duration-200 transition-all ease-linear hover:bg-custom-pink cursor-pointer max-sm:py-1 max-sm:px-3 max-sm:text-sm max-sm:mt-1"
-                >
-                  Edit Profille
-                </Link>
-              </div>
-            </div>
-            <div className="mt-16 flex flex-col gap-2 items-end max-sm:items-end max-sm:justify-end max-[367px]:mt-4 max-[367px]:w-full max-[367px]:justify-end  ">
-              <p className="flex items-center text-2xl text-custom-textColor gap-4 max-sm:text-lg">
-                <ButtonValueWallet moneyValue="$ 0,00" />
-              </p>
-              <Link
-                href={"/deposit"}
-                className="flex text-xl text-custom-pink underline max-sm:text-base"
-              >
-                Cash deposit
-              </Link>
-            </div>
-          </div>
-          <div className="flex flex-col w-full pb-10 border-b-[2px] border-custom-grayThree/20 max-sm:pb-4">
-            <ul className="flex justify-between text-custom-textColor mt-10 max-sm:mt-5">
-              <li className="group">
-                <Link
-                  href="#"
-                  className="flex items-center justify-center flex-col gap-3"
-                >
-                  <span>
-                    <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                      src={Checkout}
-                      alt="Checkout"
-                    />
-                  </span>
-                  <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    Orders
-                  </p>
-                </Link>
-              </li>
-              <li className="group">
-                <Link
-                  href="#"
-                  className="flex items-center justify-center flex-col gap-3"
-                >
-                  <span>
-                    <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                      src={Status}
-                      alt="Status"
-                    />
-                  </span>
-                  <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    Preparing
-                  </p>
-                </Link>
-              </li>
-              <li className="group">
-                <Link
-                  href="#"
-                  className="flex items-center justify-center flex-col gap-3"
-                >
-                  <span>
-                    <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                      src={Send}
-                      alt="Send"
-                    />
-                  </span>
-                  <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    In Transit
-                  </p>
-                </Link>
-              </li>
-              <li className="group">
-                <Link
-                  href="#"
-                  className="flex items-center justify-center flex-col gap-3"
-                >
-                  <span>
-                    <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                      src={Package}
-                      alt="Package"
-                    />
-                  </span>
-                  <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    Delivered{" "}
-                  </p>
-                </Link>
-              </li>
-            </ul>
-          </div>
-          <div className="flex flex-col w-full pb-10 max-sm:pb-4">
-            <ul className="flex justify-between text-custom-textColor mt-10 max-sm:mt-5">
-              <li className="flex flex-col items-center gap-3 justify-center text-center group">
-                <Link href="#" className="flex items-center flex-col gap-3">
-                  <Image
-                    className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                    src={Wallet}
-                    text-lg
-                    alt="Wallet"
-                  />
-                  <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    Wallet
-                  </p>
-                </Link>{" "}
-              </li>
-              <li className="flex flex-col items-center gap-3 justify-center text-center group">
-                <Link href="#" className="flex items-center flex-col">
-                  <Image
-                    className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8 max-sm:mt-1"
-                    src={Coupon}
-                    text-lg
-                    alt="Coupon"
-                  />
-                  <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs  max-sm:mt-2">
-                    Coupons
-                  </p>
-                </Link>
-              </li>
-              <li className="flex flex-col items-center gap-3 justify-center text-center group">
-                <Link href="#" className="flex items-center flex-col gap-3">
-                  <Image
-                    className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                    src={Gift}
-                    text-lg
-                    alt="Gift"
-                  />
-                  <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    Invite
-                  </p>
-                </Link>{" "}
-              </li>
-              <li className="flex flex-col items-center gap-3 justify-center group">
-                <Link href="#" className="flex items-center flex-col gap-3">
-                  <Image
-                    className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
-                    src={Support}
-                    text-lg
-                    alt="Support"
-                  />
-                  <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
-                    Support{" "}
-                  </p>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </main>
-    </section>
-  );
-}
-
-export default Page;
-export const session = {
-  strategy: "jwt",
-};
-export interface User {
-  id: string | number;
+interface Inputs {
   fullname: string;
   username: string;
   email: string;
+  phone: string;
+  cep?: string;
+  address?: string;
+  cpf: string;
+  file?: FileList;
+  birthdate: Date;
 }
+const phoneSchema = yup
+  .string()
+  .matches(
+    /^(\+\d{1,2}\s?)?(\(\d{1,4}\)|\d{1,4})([\s.-]?\d{1,}){1,14}$/,
+    "Por favor, insira um número de telefone válido"
+  );
+const cpfSchema = yup
+  .string()
+  .matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido");
+
+const schema = yup.object().shape({
+  fullname: yup
+    .string()
+    .required("Este campo é obrigatório!")
+    .min(8, "O mínimo de caracteres são 8."),
+  username: yup
+    .string()
+    .required("Este campo é obrigatório!")
+    .min(5, "O mínimo de caracteres são 5."),
+  email: yup
+    .string()
+    .email("Deve ser um email válido!")
+    .required("Este campo é obrigatório!"),
+  phone: phoneSchema.required("O número de telefone é obrigatório"),
+  cep: yup.string().matches(/^[0-9]{5}-[0-9]{3}$/, "CEP inválido"),
+  address: yup.string(),
+  cpf: cpfSchema.required("This field is required!"),
+  birthdate: yup
+    .date()
+    .required("A data de nascimento é obrigatória.")
+    .test("is-adult", "Você deve ter pelo menos 18 anos.", function (value) {
+      const cutoffDate = new Date();
+      cutoffDate.setFullYear(cutoffDate.getFullYear() - 18);
+      return value && value <= cutoffDate;
+    }),
+});
+interface PageProps {
+  sessionUser: any;
+}
+function Page({ sessionUser }: PageProps) {
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
+  const [success, setSuccess] = useState<number>();
+  const [errorMsg, setErrorMsg] = useState<string>();
+  const [progress, setProgress] = useState(0);
+  const { data: session, status, update } = useSession();
+  const [imgUrl, setImgUrl] = useState(
+    session?.user.profile_img ||
+      "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg"
+  );
+  const router = useRouter();
+
+  const [selectedImage, setSelectedImage] = useState<string>();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const file = data.file;
+    const gender = "Male";
+    const userId = session?.user.user_id;
+    const password = session?.user.password_hash;
+    if (!userId || !password) {
+      return console.log("ntem");
+    }
+
+    try {
+      setLoading(true);
+      if (!file || file.length === 0) {
+        const { status, msg }: any = await UpdateUser({
+          userId,
+          gender,
+          profile: imgUrl,
+          password,
+          fullname: data.fullname,
+          username: data.username,
+          email: data.email,
+          phone: data.phone,
+          birthdate: data.birthdate,
+          address: data.address || "",
+          cpf: data.cpf ? data.cpf.toString() : "",
+        });
+
+        if (status === 200) {
+          update();
+        }
+        setSuccess(status);
+        if (status !== 200) {
+          setErrorMsg(msg);
+        }
+        onShowModal()
+      } else {
+        const storageRef = ref(storage, `images/${file[0].name}`);
+        const uploadTask = uploadBytesResumable(storageRef, file[0]);
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setProgress(progress);
+          },
+          (error) => {
+            alert(error);
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(async (url) => {
+              const { status, msg }: any = await UpdateUser({
+                userId,
+                gender,
+                profile: url,
+                password,
+                fullname: data.fullname,
+                username: data.username,
+                email: data.email,
+                phone: data.phone,
+                birthdate: data.birthdate,
+                address: data.address || "",
+                cpf: data.cpf ? data.cpf.toString() : "",
+              });
+              
+              setSuccess(status);
+              if (status === 200) {
+                update();
+              }
+              if (status !== 200) {
+                setErrorMsg(msg);
+              }
+              onShowModal()
+            });
+          }
+        );
+      }
+    } catch (error: any) {
+      setErrorMsg(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const toggleProfile = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const onShowModal = () => {
+    setShow(!show);
+  };
+
+  return (
+    <>
+      <section className="min-h-screen w-full flex items-start justify-center bg-custom-grayOne">
+        <main className="max-w-[900px] w-full mx-8 bg-custom-grayOne flex  shadow-snipped relative h-fit  flex-col mt-36 mb-36">
+          {show ? (
+            <div className="absolute w-full h-full bg-black/60 z-40 flex justify-center items-center">
+              <ModalStatus
+                icon={success ? "BiCheckShield" : "BiErrorAlt"}
+                contentButton={success ? "My account" : "OK"}
+                content={
+                  success === 200
+                    ? "Your data has been changed successfully, do you want to go back?"
+                    : errorMsg
+                }
+                href={success ? "/my-account" : ""}
+                redirect={onShowModal}
+              />
+            </div>
+          ) : (
+            ""
+          )}
+          <span
+            className="absolute left-0 w-full h-24
+         bg-custom-grayTwo dark:bg-custom-grayThree z-0"
+          ></span>
+
+          <form
+            className="z-10 flex items-center justify-center w-full flex-col px-20 max-sm:px-8"
+            onSubmit={handleSubmit(onSubmit)}
+          >
+            <div className="relative">
+              <div className=" flex max-w-[150px] w-full min-h-[150px] max-h-[150px] border-[7px] border-custom-grayOne z-0 mt-7 relative rounded-full overflow-hidden">
+                <Image
+                  alt="profile logo"
+                  src={
+                    selectedImage ||
+                    session?.user.profile_img ||
+                    "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg"
+                  }
+                  className="max-h-[115px] max-w-[115px] rounded-full object-cover"
+                  width={115}
+                  height={115}
+                />
+              </div>
+
+              <label
+                htmlFor="fileInput"
+                className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-48%] cursor-pointer "
+              >
+                <input
+                  {...register("file")}
+                  type="file"
+                  id="fileInput"
+                  accept="image/*"
+                  onChange={toggleProfile}
+                  className="sr-only"
+                  disabled={loading ? true : false}
+                />
+                <div className="w-[120px] h-[120px] rounded-full flex items-center justify-center border-custom-grayOne bg-custom-grayOne/60 border-[2px] duration-300 ease-linear hover:bg-custom-grayTwo/90">
+                  <MdOutlinePhotoCameraBack className="text-5xl text-custom-textColor/60" />
+                </div>
+              </label>
+            </div>
+            <div className="mt-5 w-full flex flex-col items-start">
+              <InputUi
+                type="text"
+                label="Username"
+                pleaceholder="neydelas011"
+                classname="w-full text-custom-textColor"
+                name="username"
+                register={register}
+                error={errors?.username?.message}
+                disabled={loading ? true : false}
+                defaultvalue={session?.user.username}
+              />
+              <InputUi
+                type="text"
+                label="Fullname"
+                pleaceholder="Neymar Santos Junior"
+                classname="w-full text-custom-textColor"
+                name="fullname"
+                register={register}
+                error={errors?.fullname?.message}
+                disabled={loading ? true : false}
+                defaultvalue={session?.user.fullname}
+              />
+              <InputUi
+                type="email"
+                label="Email"
+                pleaceholder="neymar.arabia@gmail.com"
+                classname="w-full text-custom-textColor"
+                name="email"
+                register={register}
+                error={errors?.email?.message}
+                disabled={loading ? true : false}
+                defaultvalue={session?.user.email}
+              />
+              <InputUi
+                type="text"
+                label="CPF"
+                pleaceholder="xxx.xxx.xxx-xx"
+                classname="w-full text-custom-textColor"
+                name="cpf"
+                register={register}
+                error={errors?.cpf?.message}
+                disabled={loading ? true : false}
+                defaultvalue={session?.user.cpf}
+              />
+              <div className="flex justify-between w-full gap-9 max-sm:flex-wrap max-sm:gap-0">
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
+                  <InputUi
+                    type="date"
+                    label="Date of birth"
+                    pleaceholder=""
+                    classname="w-full text-custom-textColor inputDate"
+                    name="birthdate"
+                    register={register}
+                    error={errors?.birthdate?.message}
+                    disabled={loading ? true : false}
+                    defaultvalue={session?.user.date_of_birth}
+                  />
+                </div>
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
+                  <InputUi
+                    type="text"
+                    label="Phone"
+                    pleaceholder="11 99999-9999"
+                    classname="w-full text-custom-textColor"
+                    name="phone"
+                    register={register}
+                    error={errors?.phone?.message}
+                    disabled={loading ? true : false}
+                    defaultvalue={session?.user.phone}
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between w-full gap-9 max-sm:flex-wrap max-sm:gap-0">
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
+                  <InputUi
+                    type="text"
+                    label="Address"
+                    pleaceholder="Rua Vereda Alfa, 35"
+                    classname="w-full text-custom-textColor"
+                    name="address"
+                    register={register}
+                    error={errors?.address?.message}
+                    disabled={loading ? true : false}
+                    defaultvalue={session?.user.address}
+                  />
+                </div>
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
+                  <InputUi
+                    type="text"
+                    label="Cep"
+                    pleaceholder="08450000"
+                    classname="w-full text-custom-textColor"
+                    name="cep"
+                    register={register}
+                    error={errors?.cep?.message}
+                    disabled={loading ? true : false}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-end w-full gap-4 text-custom-textColor font-semibold mt-6 pb-6">
+              <button
+                type="button"
+                className="py-2 px-6 border-2 border-custom-pink/40 rounded-md hover:bg-custom-pink duration-300 ease-linear"
+                onClick={() => router.back()}
+                disabled={loading ? true : false}
+              >
+                Cancel
+              </button>
+              {loading ? (
+                <span className="py-2 px-6 bg-custom-pink rounded-md">
+                  <ImSpinner9 className="animate-spin text-3xl" />
+                </span>
+              ) : (
+                <button
+                  type="submit"
+                  className="py-2 px-6 bg-custom-pink/40 rounded-md hover:bg-custom-pink duration-300 ease-linear"
+                >
+                  Save
+                </button>
+              )}
+            </div>
+          </form>
+          <br />
+        </main>
+      </section>
+    </>
+  );
+}
+export default Page;
