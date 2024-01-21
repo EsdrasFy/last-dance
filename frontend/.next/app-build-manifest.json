@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/shop/product/[...slug]/page": [
+    "/shop/[[...slug]]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/shop/product/[...slug]/page.js"
+      "static/chunks/app/shop/[[...slug]]/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",

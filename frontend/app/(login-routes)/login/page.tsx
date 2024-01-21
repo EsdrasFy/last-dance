@@ -81,7 +81,7 @@ function Login() {
   };
 
   return (
-    <section className="w-full h-screen bg-custom-grayTwo flex justify-center items-center">
+    <section className="w-full h-screen bg-custom-grayTwo flex justify-center items-center mt-8">
       <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
@@ -118,13 +118,13 @@ function Login() {
           )}
           <nav className="flex w-full justify-between px-6 text-custom-textColor py-4 ">
             <Link href="/">
-              <FaArrowLeft className="text-3xl hover-snipped " />
+              <FaArrowLeft className="text-3xl hover-snipped max-sm:text-xl" />
             </Link>
-            <Link href="/register" className="text-xl hover-snipped">
+            <Link href="/register" className="text-xl hover-snipped max-sm:text-base">
               Register
             </Link>
           </nav>
-          <h2 className="w-full text-center text-custom-pink text-3xl mb-5">Login</h2>
+          <h2 className="w-full text-center text-custom-pink text-3xl mb-5 max-sm:text-2xl">Login</h2>
           <form
             className="flex w-full flex-col  justify-center px-10 pb-10"
             onSubmit={handleSubmit(onSubmit)}
@@ -150,14 +150,12 @@ function Login() {
               error={errors?.password?.message}
               disabled={loading ? true : false}
             />
+            <ButtonIcon type="submit" content="Login" icon="FaArrowRight" classname="justify-end mt-8 max-sm:justify-start duration-300 ease-linear" />
             <div className="flex justify-end">
-              <Link href="forgot-password"></Link>
-
-              <Button onClick={onOpen} className="openForgout">
+              <button onClick={onOpen} className="text-custom-textColor my-3 font-light text-sm duration-300 ease-linear hover:text-custom-pink">
                 Forgot your password?
-              </Button>
+              </button>
             </div>
-            <ButtonIcon type="submit" content="Login" icon="FaArrowRight" />
           </form>
           <div className="w-full flex flex-col justify-end items-center text-custom-textColor pb-5">
             <p className="text-2xl mb-3">Or</p>

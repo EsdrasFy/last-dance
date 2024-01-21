@@ -249,6 +249,10 @@ async function filterProducts(req: Request, res: Response) {
     ///////////////////////////////////////////////////////////////////////////////////
     if (categoria) {
       where.category = categoria;
+      console.log("categoria");
+      console.log(categoria);
+      console.log("categoria");
+      
     }
     if (state) {
       where.state = state;

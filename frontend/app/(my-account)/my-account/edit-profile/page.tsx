@@ -212,7 +212,7 @@ function page({ sessionUser }: EditProfile) {
           ></span>
 
           <form
-            className="z-10 flex items-center justify-center w-full flex-col px-20"
+            className="z-10 flex items-center justify-center w-full flex-col px-20 max-sm:px-8"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div className="relative">
@@ -293,8 +293,8 @@ function page({ sessionUser }: EditProfile) {
                 disabled={loading ? true : false}
                 defaultvalue={session?.user.cpf}
               />
-              <div className="flex justify-between w-full gap-9">
-                <div className="w-1/2 flex gap-[1px] flex-col">
+              <div className="flex justify-between w-full gap-9 max-sm:flex-wrap max-sm:gap-0">
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
                   <InputUi
                     type="date"
                     label="Date of birth"
@@ -307,7 +307,7 @@ function page({ sessionUser }: EditProfile) {
                     defaultvalue={session?.user.date_of_birth}
                   />
                 </div>
-                <div className="w-1/2 flex gap-[1px] flex-col">
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
                   <InputUi
                     type="text"
                     label="Phone"
@@ -321,8 +321,8 @@ function page({ sessionUser }: EditProfile) {
                   />
                 </div>
               </div>
-              <div className="flex justify-between w-full gap-9">
-                <div className="w-1/2 flex gap-[1px] flex-col">
+              <div className="flex justify-between w-full gap-9 max-sm:flex-wrap max-sm:gap-0">
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
                   <InputUi
                     type="text"
                     label="Address"
@@ -335,7 +335,7 @@ function page({ sessionUser }: EditProfile) {
                     defaultvalue={session?.user.address}
                   />
                 </div>
-                <div className="w-1/2 flex gap-[1px] flex-col">
+                <div className="w-1/2 flex gap-[1px] flex-col max-sm:w-full">
                   <InputUi
                     type="text"
                     label="Cep"

@@ -1,7 +1,7 @@
 import NavbarHome from "@/app/components/navbarHome/navbarHome";
 import SearchInput from "@/app/components/ui/searchInput";
 import Image from "next/image";
-import React from "react";
+import React, { Suspense } from "react";
 import Model1 from "@/app/assets/model1.webp";
 import Model2 from "@/app/assets/model2.webp";
 import Model3 from "@/app/assets/model3.webp";
@@ -9,9 +9,8 @@ import Model4 from "@/app/assets/model4.webp";
 import CarrosselShop from "@/app/components/ui/carrosel/carrosselShop";
 
 function Shop() {
-
   return (
-    <main className="flex mx-10 min-h-screen max-w-[1050px] w-full px-10 flex-col items-center mt-24 max-md:mx-8">
+    <main className="flex min-h-screen max-w-[1050px] w-full px-10 flex-col items-center mt-24 max-md:mx-8">
       <aside className="flex w-full justify-center mt-4 md:hidden">
         <SearchInput classname="min-md:hidden w-full" />
       </aside>
@@ -61,7 +60,9 @@ function Shop() {
           />
         </div>{" "}
       </section>
-     <CarrosselShop query="order_by=created_at:desc" category="NEWS"/>
+          <CarrosselShop query="order_by=created_at:desc" category="NEWS" />
+
+          <CarrosselShop query="categoria=moda-fitness" category="FITNESS FASHION" />
     </main>
   );
 }

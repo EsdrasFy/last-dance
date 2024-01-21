@@ -40,14 +40,14 @@ function CardSlide({ data }:CardSlideProps) {
       </a>
       <div className="py-2 px-1 flex-col flex justify-between min-h-[112px]">
         {" "}
-        <a href={`/shop/product/${data.id}/${generateTitle}`}>
+        <Link href={`/shop/product/${data.id}/${generateTitle}`}>
 
         <div>
           <h5 className="text-sm tracking-tight text-custom-textColor line-clamp-2">
             {data.title}
           </h5>
         </div>
-        <div className="flex flex-col w-full justify-between h-full">
+        <div className="flex flex-col w-full justify-between">
           <div className="flex items-center gap-3 mt-2">
             <span className="text-xl text-custom-pink">$ {data.price} </span>
             <span className="text-custom-grayThree text-xs">in cash</span>
@@ -59,7 +59,7 @@ function CardSlide({ data }:CardSlideProps) {
             </span>
           </div>
         </div>
-        </a>
+        </Link>
       </div>
       <div
         className="soft-entry2 absolute z-40 bottom-3 min-h-[130px] bg-opacity-10 bg-white backdrop-blur-md

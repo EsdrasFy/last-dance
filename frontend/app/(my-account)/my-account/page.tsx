@@ -35,7 +35,6 @@ async function MyAccount() {
   }, []);
 
   const { data: session, status } = useSession();
-  console.log(session?.user?.profile_img);
   if (status === "loading") {
     return console.log("loading" + session);
   }
@@ -66,36 +65,36 @@ async function MyAccount() {
               </li>
             </ul>
           </aside>
-          <div className="z-10 px-12 max-sm:px-5">
-            <div className="flex w-full justify-between pb-16 border-b-[2px] border-custom-grayThree/20">
+          <div className="z-10 px-12 max-sm:px-2">
+            <div className="flex w-full justify-between pb-16 border-b-[2px] border-custom-grayThree/20 max-sm:pb-6 max-sm:flex-wrap">
               <div className="flex flex-col -mt-5 ">
                 <figure className="max-w-[120px] flex mb-4">
                   <Image
                     src={session?.user.profile_img || "https://as1.ftcdn.net/v2/jpg/03/39/45/96/1000_F_339459697_XAFacNQmwnvJRqe1Fe9VOptPWMUxlZP8.jpg"}
                     alt="user profile"
-                    className="w-full object-cover rounded-full border-[6px] border-custom-grayTwo min-w-[115px] min-h-[115px] max-w-[115px] max-h-[115px]"
+                    className="w-full object-cover rounded-full border-[6px] border-solid border-custom-grayOne min-w-[115px] min-h-[115px] max-w-[115px] max-h-[115px]"
                     width={115}
                     height={115}
                   />
                 </figure>
                 <div className="flex flex-col gap-3 items-start">
-                  <h3 className="text-2xl text-custom-textColor max-sm:text-2xl">
+                  <h3 className="text-2xl text-custom-textColor max-sm:text-xl">
                     {session?.user?.fullname}
                   </h3>
-                  <p className="text-xl text-custom-textColor max-sm:text-lg">
+                  <p className="text-xl text-custom-textColor max-sm:text-sm">
                     {session?.user?.email}
                   </p>
                   <Link
                     href="/my-account/edit-profile"
-                    className="mt-4 bg-custom-pink/30 py-3 text-base text-custom-textColor font-medium px-10 rounded-md duration-200 transition-all ease-linear hover:bg-custom-pink cursor-pointer"
+                    className="mt-4 bg-custom-pink/30 py-3 text-base text-custom-textColor font-medium px-10 rounded-md duration-200 transition-all ease-linear hover:bg-custom-pink cursor-pointer max-sm:py-1 max-sm:px-3 max-sm:text-sm max-sm:mt-1"
                   >
                     Edit Profille
                   </Link>
                 </div>
               </div>
-              <div className="mt-16 flex flex-col gap-2 items-end">
-                <p className="flex items-center text-2xl text-custom-textColor gap-4 max-sm:text-xl">
-                  <ButtonValueWallet moneyValue="R$ 0,00" />
+              <div className="mt-16 flex flex-col gap-2 items-end max-sm:items-end max-sm:justify-end max-[367px]:mt-4 max-[367px]:w-full max-[367px]:justify-end  ">
+                <p className="flex items-center text-2xl text-custom-textColor gap-4 max-sm:text-lg">
+                  <ButtonValueWallet moneyValue="$ 0,00" />
                 </p>
                 <Link
                   href={"/deposit"}
@@ -105,8 +104,8 @@ async function MyAccount() {
                 </Link>
               </div>
             </div>
-            <div className="flex flex-col w-full pb-10 border-b-[2px] border-custom-grayThree/20">
-              <ul className="flex justify-between text-custom-textColor mt-10">
+            <div className="flex flex-col w-full pb-10 border-b-[2px] border-custom-grayThree/20 max-sm:pb-4">
+              <ul className="flex justify-between text-custom-textColor mt-10 max-sm:mt-5">
                 <li className="group">
                   <Link
                     href="#"
@@ -114,12 +113,12 @@ async function MyAccount() {
                   >
                     <span>
                       <Image
-                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                         src={Checkout}
                         alt="Checkout"
                       />
                     </span>
-                    <p className="duration-200 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       Orders
                     </p>
                   </Link>
@@ -131,12 +130,12 @@ async function MyAccount() {
                   >
                     <span>
                       <Image
-                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                         src={Status}
                         alt="Status"
                       />
                     </span>
-                    <p className="duration-200 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       Preparing
                     </p>
                   </Link>
@@ -148,12 +147,12 @@ async function MyAccount() {
                   >
                     <span>
                       <Image
-                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                         src={Send}
                         alt="Send"
                       />
                     </span>
-                    <p className="duration-200 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       In Transit
                     </p>
                   </Link>
@@ -165,29 +164,29 @@ async function MyAccount() {
                   >
                     <span>
                       <Image
-                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                        className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                         src={Package}
                         alt="Package"
                       />
                     </span>
-                    <p className="duration-200 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-200 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       Delivered{" "}
                     </p>
                   </Link>
                 </li>
               </ul>
             </div>
-            <div className="flex flex-col w-full pb-10 ">
-              <ul className="flex justify-between text-custom-textColor mt-10">
+            <div className="flex flex-col w-full pb-10 max-sm:pb-4">
+              <ul className="flex justify-between text-custom-textColor mt-10 max-sm:mt-5">
                 <li className="flex flex-col items-center gap-3 justify-center text-center group">
                   <Link href="#" className="flex items-center flex-col gap-3">
                     <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                       src={Wallet}
                       text-lg
                       alt="Wallet"
                     />
-                    <p className="duration-300 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       Wallet
                     </p>
                   </Link>{" "}
@@ -195,12 +194,12 @@ async function MyAccount() {
                 <li className="flex flex-col items-center gap-3 justify-center text-center group">
                   <Link href="#" className="flex items-center flex-col">
                     <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8 max-sm:mt-1"
                       src={Coupon}
                       text-lg
                       alt="Coupon"
                     />
-                    <p className="duration-300 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs  max-sm:mt-2">
                       Coupons
                     </p>
                   </Link>
@@ -208,12 +207,12 @@ async function MyAccount() {
                 <li className="flex flex-col items-center gap-3 justify-center text-center group">
                   <Link href="#" className="flex items-center flex-col gap-3">
                     <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                       src={Gift}
                       text-lg
                       alt="Gift"
                     />
-                    <p className="duration-300 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       Invite
                     </p>
                   </Link>{" "}
@@ -221,12 +220,12 @@ async function MyAccount() {
                 <li className="flex flex-col items-center gap-3 justify-center group">
                   <Link href="#" className="flex items-center flex-col gap-3">
                     <Image
-                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-14"
+                      className="duration-200 ease-in-out text-lg w-20 group-hover:scale-105 max-sm:w-8"
                       src={Support}
                       text-lg
                       alt="Support"
                     />
-                    <p className="duration-300 ease-in-out group-hover:text-custom-pink">
+                    <p className="duration-300 ease-in-out group-hover:text-custom-pink max-sm:text-sm max-[367px]:text-xs ">
                       Support{" "}
                     </p>
                   </Link>

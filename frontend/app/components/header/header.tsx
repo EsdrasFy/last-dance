@@ -16,7 +16,7 @@ interface headerProps {
 async function Header({ href }: headerProps) {
   return (
     <>
-      <header className="flex justify-between items-center bg-custom-grayTwo py-4 px-7 beforeEffect afterEffect absolute top-0 left-0 w-full z-50">
+      <header className="flex justify-between items-center bg-custom-grayTwo py-4 px-7 beforeEffect afterEffect absolute top-0 left-0 w-full z-50 max-sm:px-3">
         <Link className="flex w-fit gap-3 items-center" href={"/shop"}>
           <Image
             src={logo}
@@ -25,7 +25,7 @@ async function Header({ href }: headerProps) {
             height={35}
             className=""
           />
-          <p className="max-w-[80px] leading-5 text-[15px] tracking-widest text-white max-md:text-base">
+          <p className="max-w-[80px] leading-5 text-[15px] tracking-widest text-white max-md:text-base max-sm:text-sm">
             URBAN VOGUE
           </p>
         </Link>
@@ -44,3 +44,4 @@ async function Header({ href }: headerProps) {
 }
 
 export default Header;
+ 

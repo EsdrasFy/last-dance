@@ -29,7 +29,7 @@ function ButtonIcon({
   return (
     <button
       type={type}
-      className={`group bg-none border-2 border-custom-pink flex justify-end text-custom-textColor py-3 ${classname}  rounded text-xl duration-300 hover:bg-custom-pink`}
+      className={`group bg-none border-2 border-custom-pink flex text-custom-textColor py-2.5 ${classname}  rounded text-xl duration-300 hover:bg-custom-pink`}
       disabled={disabled}
     >
       <span className="flex justify-between items-center px-3 max-w-[60%] w-full ">

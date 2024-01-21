@@ -28,7 +28,6 @@ type Inputs = {
   cep: string;
 };
 
-
 const schema = yup.object().shape({
   cep: yup.string().required("This field is required!"),
 });
@@ -71,20 +70,20 @@ function Page({ params }: any) {
   useEffect(() => {
     const fetchData = async () => {
       const query = params.slug[0];
-  
+
       try {
         const res: ApiResponse | undefined = await ProductsById(query);
         if (res?.status === 200) {
-          if ('products' in res.data) {
+          if ("products" in res.data) {
             const { price, images, sizes, colors } = res.data.products[0];
             if (price) {
               const priceValue = parseFloat(price);
               setPrice(priceValue);
-  
+
               const installment = (priceValue / 6).toFixed(2);
               setInstallment(parseFloat(installment));
             }
-  
+
             if (images?.length > 0) {
               setSelectImage(images[0].url);
             }
@@ -94,22 +93,23 @@ function Page({ params }: any) {
             if (colors?.length > 0) {
               setSelectColor(colors[0].name_color);
             }
-  
+
             setDataCard(res.data.products[0]);
           } else {
             console.error("Resposta da requisição não contém dados esperados.");
           }
         } else {
-          console.error("Resposta da requisição é undefined ou não contém dados.");
+          console.error(
+            "Resposta da requisição é undefined ou não contém dados."
+          );
         }
       } catch (error) {
         console.error("Erro na requisição do produto:", error);
       }
     };
-  
+
     fetchData();
   }, [params.slug]);
-
 
   const handleAddItem = () => {
     const data = {
@@ -410,12 +410,7 @@ function Page({ params }: any) {
         <AccordionItem className="border-none">
           <h2>
             <AccordionButton>
-              <Box
-                as="span"
-                flex="1"
-                textAlign="left"
-                className="text-2xl font-semibold"
-              >
+              <Box as="span" flex="1" textAlign="left" className="text-xl">
                 Summary
               </Box>
               <AccordionIcon
@@ -425,23 +420,13 @@ function Page({ params }: any) {
               />
             </AccordionButton>
           </h2>
-          <AccordionPanel pb={4}>
-            Pants made from athletics mesh. Legging model, with medium waist and
-            silicone waistband for a better fit to the body. Marbled print. It
-            has a double pocket. Rear reflective heat-adhesive appliqué detail.
-            Invest!
-          </AccordionPanel>
+          <AccordionPanel pb={4} className="text-custom-textColor/70">{dataCard?.summary}</AccordionPanel>
         </AccordionItem>
 
         <AccordionItem className="border-none">
           <h2>
             <AccordionButton>
-              <Box
-                as="span"
-                flex="1"
-                textAlign="left"
-                className="text-2xl font-semibold"
-              >
+              <Box as="span" flex="1" textAlign="left" className="text-xl">
                 Details
               </Box>
               <AccordionIcon
@@ -452,10 +437,15 @@ function Page({ params }: any) {
             </AccordionButton>
           </h2>
           <AccordionPanel pb={4}>
-            Pants made from athletics mesh. Legging model, with medium waist and
-            silicone waistband for a better fit to the body. Marbled print. It
-            has a double pocket. Rear reflective heat-adhesive appliqué detail.
-            Invest!
+            <ol className="list-disc pl-6 flex flex-col gap-4 text-custom-textColor/70">
+              {dataCard?.details.map(
+                (detail, index) =>
+                  detail &&
+                  detail.detail.trim() !== "" && (
+                    <li key={index}>{detail.detail}</li>
+                  )
+              )}
+            </ol>
           </AccordionPanel>
         </AccordionItem>
       </Accordion>

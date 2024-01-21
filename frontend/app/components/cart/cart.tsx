@@ -21,6 +21,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import Card from "@/app/interfaces/Card";
 import ProductsById from "@/app/api/ProductsById";
 import ItemCard from "./itemCard";
+import ButtonIcon from "../ui/buttonIcon";
+import { FaArrowRight } from "react-icons/fa";
 
 interface ApiResponse {
   data: ProductResponse | any[];
@@ -45,11 +47,10 @@ interface CartSummary {
 }
 
 function Cart() {
-  
   const [arrow1, setArrow1] = useState(false);
   const [arrow2, setArrow2] = useState(false);
   const [dataProducts, setDataProducts] = useState<Card[]>([]);
-  
+
   const context = useContext(ContextApp);
   if (!context) {
     // Tratar o caso onde o contexto não está definido, se necessário
@@ -91,17 +92,17 @@ function Cart() {
         finalFocusRef={btnRef}
       >
         <DrawerOverlay />
-        <DrawerContent backgroundColor={"#1d2123"} textColor={"#d9d9d9"}>
-          {dataProducts ? <p>Tem data</p> : <p>Nao tem data</p>}
-          <DrawerCloseButton />
-          <DrawerHeader>CART</DrawerHeader>
+        <DrawerContent backgroundColor={"#171a1b"} textColor={"#d9d9d9"}>
+          <DrawerCloseButton className="hover:text-custom-pink" />
+          <DrawerHeader className="shadow-snipped">SHOPPING CART</DrawerHeader>
           <Divider />
-          <DrawerBody>
+          <DrawerBody backgroundColor={"#171a1b"}>
             <ul className="flex flex-col gap-2 ">
-              {cartSummary?.products.map((product: any, index) => {
+              {cartSummary?.products.map((product: any, index, array) => {
                 const matchingProduct = dataProducts.find(
                   (dataProduct) => dataProduct.id === product.id
                 ) as Card | null;
+                const isLastItem = index === array.length - 1;
 
                 return (
                   <ItemCard
@@ -109,20 +110,39 @@ function Cart() {
                     dataCart={product}
                     quantity={product.quantity}
                     id={product.id}
-                    variation={product.size || "default"}
+                    index={index}
+                    size={product.size || "default"}
                     color={product.color || "default"}
                     dataId={matchingProduct}
+                    isLastItem={isLastItem}
                   />
                 );
               })}
             </ul>
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue">Save</Button>
+          <Divider className="shadow-snipped" />
+          <DrawerFooter
+            backgroundColor={"#1d2123"}
+            className="w-full flex justify-between"
+          >
+            <div className="flex justify-between w-full items-center max-sm:">
+              <div className="text-xl text-custom-pink">
+                TOTAL{" "}
+                <span className="text-custom-textColor font-medium ml-2 max-sm:ml-0">
+                  ${cartSummary?.totalPrice.toFixed(2)}
+                </span>
+              </div>
+              <button
+                type="button"
+                className={`group bg-none border-2 w-56 border-custom-pink flex gap-12 items-center pl-2 justify-center max-sm:py-2 text-custom-textColor py-1 rounded text-lg duration-300 hover:bg-custom-pink`}
+              >
+                  <span>Close order</span>
+                  <FaArrowRight
+                    className="transition-all ease-in-out -translate-x-7 group-hover:translate-x-0 duration-1000"
+                  />
+              </button>
+            </div>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

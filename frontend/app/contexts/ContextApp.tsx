@@ -31,7 +31,10 @@ interface AppContextProps {
   cartSummary: CartSummary | undefined;
   setCartSummary: React.Dispatch<React.SetStateAction<CartSummary | undefined>>;
   addItemToCart: (data: Product) => void;
-  removeItemFromCart: (id: number) => void;
+  updateItemQuantity: (id: number, index: number,  quantity: number, size: string, color: string) => void;
+  removeItemFromCart: (id: number,  index: number) => void;
+  productsCart: Product[];
+  calculateCartSummary: (cartItems: Product[]) => CartSummary;
   disclosure: UseDisclosureReturn;
   disclosureFav: UseDisclosureReturn;
 }
@@ -102,9 +105,26 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     localStorage.setItem("MyCart", JSON.stringify(updatedCart));
     setCartSummary(calculateCartSummary(updatedCart));
   };
+  const removeItemFromCart = (id: number, index: number) => {
+    const updatedCart = productsCart.filter((item, indexItem) => item.id !== id || indexItem !== index);
+    setProductsCart(updatedCart);
+    localStorage.setItem("MyCart", JSON.stringify(updatedCart));
+    setCartSummary(calculateCartSummary(updatedCart));
+  };
 
-  const removeItemFromCart = (id: number) => {
-    const updatedCart = productsCart.filter((item) => item.id !== id);
+  const updateItemQuantity = (
+    id: number,
+    index: number,
+    quantity: number,
+    size: string,
+    color: string = "default"
+  ) => {
+    const updatedCart = productsCart.map((product, i) =>
+      i === index && product.id === id
+        ? { ...product, quantity, size, color }
+        : product
+    );
+  
     setProductsCart(updatedCart);
     localStorage.setItem("MyCart", JSON.stringify(updatedCart));
     setCartSummary(calculateCartSummary(updatedCart));
@@ -118,8 +138,11 @@ const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     totalQuant,
     setTotalQuant,
     filteredProducts,
+    calculateCartSummary,
+    productsCart,
     setFilteredProducts,
     removeItemFromCart,
+    updateItemQuantity,
     addItemToCart,
     disclosure,
     disclosureFav,

@@ -183,7 +183,7 @@ function Register() {
               type="submit"
               content="Register"
               icon="FaArrowRight"
-              classname={`${errors?.password?.message ? "mt-0" : "mt-11"}`}
+              classname={`${errors?.password?.message ? "mt-0 justify-end max-sm:justify-start duration-300 ease-linear" : "mt-11 justify-end max-sm:justify-start duration-300 ease-linear"}`}
               error={errors?.password?.message}
               disabled={loading ? true : false}
             />
