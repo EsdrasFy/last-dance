@@ -6,7 +6,7 @@ import cors from "cors";
 const PORT = process.env.PORT;
 const app = express();
 
-app.use(cors({ credentials: true, origin: "https://urban-vogue.vercel.app" }));
+app.use(cors({ credentials: true, origin: '*' }));
 
 app.use(express.json());
 app.use(cookieParser());

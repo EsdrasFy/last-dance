@@ -45,7 +45,7 @@ async function Page() {
           render && "soft-entry"
         }`}
       >
-        <main className=" max-w-[900px] w-full mx-8 bg-grayOne flex  shadow-snipped relative h-fit  flex-col mt-36 max-md:mt-28">
+        <main className=" max-w-[900px] w-full mx-8 bg-grayOne flex  max-sm:mx-2 shadow-snipped relative h-fit  flex-col mt-36 max-md:mt-28">
           <span
             className="absolute left-0 w-full h-24
          bg-custom-grayThree"

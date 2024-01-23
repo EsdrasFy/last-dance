@@ -10,7 +10,7 @@ import CarrosselShop from "@/app/components/ui/carrosel/carrosselShop";
 
 function Shop() {
   return (
-    <main className="flex min-h-screen max-w-[1050px] w-full px-10 flex-col items-center mt-24 max-md:mx-8">
+    <main className="flex min-h-screen max-w-[1050px] w-full px-10 max-sm:px-2 flex-col items-center mt-24 max-md:mx-8">
       <aside className="flex w-full justify-center mt-4 md:hidden">
         <SearchInput classname="min-md:hidden w-full" />
       </aside>
