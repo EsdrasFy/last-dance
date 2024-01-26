@@ -11,9 +11,10 @@ import Card from "@/app/interfaces/Card";
 interface CarrosselShopProps {
   query: string;
   category: string;
+  classname?:string
 }
 
-function CarrosselShop({ query, category }: CarrosselShopProps) {
+function CarrosselShop({ query, category, classname }: CarrosselShopProps) {
   const [data, setData] = useState<Card[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<unknown | null>(null);
@@ -24,7 +25,6 @@ function CarrosselShop({ query, category }: CarrosselShopProps) {
         setLoading(true);
         const result: any = await ProductQuery(query);
         setData(result.data);
-        console.log(result);
       } catch (error) {
         setError(error);
       } finally {
@@ -36,7 +36,7 @@ function CarrosselShop({ query, category }: CarrosselShopProps) {
   }, [query]);
 
   return (
-    <section className={`relative w-full pt-10 pb-14 `}>
+    <section className={`relative w-full ${classname} `}>
       <h3 className="font-extralight text-2xl text-custom-textColor mb-4">
         {category}
       </h3>
@@ -79,12 +79,6 @@ function CarrosselShop({ query, category }: CarrosselShopProps) {
               <CardSlide data={card} />
             </SwiperSlide>
           ))}
-          <div className="swiper-button-prev next-prev absolute top-1/2 cursor-pointer -translate-y-1/2 -left-[6%] hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear rounded-md py-5 flex items-center justify-center">
-            <SlArrowLeft className="text-5xl text-custom-pink" />
-          </div>
-          <div className="swiper-button-next next-prev absolute top-1/2 cursor-pointer -translate-y-1/2 -right-[6%] hover:bg-custom-grayThree/40 duration-300 transition-all ease-linear rounded-md py-5 flex items-center justify-center">
-            <SlArrowRight className="text-5xl text-custom-pink" />
-          </div>
         </Swiper>
       )}
     </section>

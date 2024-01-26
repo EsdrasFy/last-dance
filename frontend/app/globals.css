@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Nanum+Gothic&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Major+Mono+Display&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap");
@@ -207,28 +207,28 @@ body {
 .imageSlide {
   max-height: 80% !important;
 }
-.heart{
+.heart {
   position: absolute;
   background: url("assets/img1.png") no-repeat;
   background-position: left;
   background-size: 2900%;
   height: 90px;
   width: 90px;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
-.heartActived{
+.heartActived {
   background-position: right;
-  animation: animateHeart .8s steps(28) 1;
+  animation: animateHeart 0.8s steps(28) 1;
 }
 @keyframes animateHeart {
-  0%{
+  0% {
     background-position: left;
   }
-  100%{
+  100% {
     background-position: right;
   }
-  
 }
+
 select:not([size]) {
   background: none !important;
 }
@@ -236,4 +236,41 @@ select:not([size]) {
   .next-prev {
     display: none;
   }
+}
+.outer {
+  height: 160px;
+  width: 160px;
+  padding: 20px;
+  box-shadow: 6px 6px 10px -1px rbga(0, 0, 0, 0.15),
+    -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+.inner {
+  height: 120px;
+  width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 4px 4px 6px -1px rgba(0, 0, 0, 0.2),
+    inset -4px -4px 6px -1px rgba(255, 255, 255, 0.7), -0.5px -0.5px,
+    0px rgba(255, 255, 255, 1), 0.5px 0.5px 0px rgba(0, 0, 0, 0.15),
+    0px 12px 10px -10px rgba(0, 0, 0, 0.05);
+  border-radius: 50%;
+}
+#number{
+  font-weight: 600;
+  color: #555;
+
+}
+circle{
+  fill: none;
+  stroke: url(#GradientColor);
+  stroke-width:  20px;
+  stroke-dasharray: 450;
+}
+
+svg.progressbar{
+  position: absolute;
+  top: 0;
+  left: 0;
 }

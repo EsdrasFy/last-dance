@@ -234,6 +234,7 @@ async function filterProducts(req: Request, res: Response) {
     id,
     search,
     categoria,
+    brand,
     valor_min,
     valor_max,
     state,
@@ -249,9 +250,10 @@ async function filterProducts(req: Request, res: Response) {
     ///////////////////////////////////////////////////////////////////////////////////
     if (categoria) {
       where.category = categoria;
-      console.log("categoria");
-      console.log(categoria);
-      console.log("categoria");
+      
+    }
+    if (brand) {
+      where.brand = brand;
       
     }
     if (state) {

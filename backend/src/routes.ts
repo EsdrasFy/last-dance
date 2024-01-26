@@ -4,13 +4,8 @@ import express from "express";
 import DefaultController from "./controllers/DefaultController";
 import UserController from "./controllers/UserController";
 import ProductController from "./controllers/ProductController";
-import checkAuthentication from "./middlewares/authMiddlewares";
-import { Request, Response } from "express";
-import User from "./models/User";
-import { Model } from "sequelize";
+import CommentController from "./controllers/CommentController";
 require("dotenv").config();
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 const routes = express.Router();
 
 
@@ -34,6 +29,9 @@ routes.get("/product/filter", ProductController.filterProducts);
 routes.get("/product/:ids", ProductController.productsById);
 routes.get("/scraping/:content", ProductController.scraping);
 
+// Rotas para comentarios
+
+routes.post("/comment/create", CommentController.createComment )
 export default routes;
 
 /*arâmetros da query:

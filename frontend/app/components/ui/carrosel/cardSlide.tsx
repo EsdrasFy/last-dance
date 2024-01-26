@@ -9,7 +9,6 @@ interface CardSlideProps{
 }
 function CardSlide({ data }:CardSlideProps) {
   const [isHovered, setIsHovered] = useState(false);
-  console.log(data.id);
   
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -27,7 +26,7 @@ function CardSlide({ data }:CardSlideProps) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <a href={`/shop/product/${data.id}/${generateTitle}`} className="object-cover flex justify-center items-center">
+      <Link href={`/shop/product/${data.id}/${data.category}/${generateTitle}`} className="object-cover flex justify-center items-center">
         
         <Image
           width={200}
@@ -37,10 +36,10 @@ function CardSlide({ data }:CardSlideProps) {
           alt="a"
           className="border-image w-full h-full bg-center max-h-[275px]"
         />
-      </a>
+      </Link>
       <div className="py-2 px-1 flex-col flex justify-between min-h-[112px]">
         {" "}
-        <Link href={`/shop/product/${data.id}/${generateTitle}`}>
+        <Link href={`/shop/product/${data.id}/${data.category}/${generateTitle}`}>
 
         <div>
           <h5 className="text-sm tracking-tight text-custom-textColor line-clamp-2">

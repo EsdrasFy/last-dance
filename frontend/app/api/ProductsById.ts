@@ -7,14 +7,11 @@ async function ProductsById(ids: string) {
     if (!data) {
       console.log("n oego produto");
     }
-    console.log(data.status);
-
     return {
       data: data.data,
       status: data.status,
     };
   } catch (error) {
-    console.log(error);
   }
 }
 export default ProductsById;

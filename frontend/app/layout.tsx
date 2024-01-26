@@ -29,7 +29,7 @@ export default async function RootLayout({
         <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
       </head>
       <body
-        className={`flex w-full justify-center min-h-screen items-center`}
+        className={`flex flex-col w-full px-2 justify-center min-h-screen items-center`}
       >
         <AppProvider>
           <ChakraProvider>

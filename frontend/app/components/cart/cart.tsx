@@ -91,7 +91,12 @@ function Cart() {
         onClose={onClose}
         finalFocusRef={btnRef}
       >
-        <DrawerOverlay />
+        <DrawerOverlay
+          bg="none"
+          backdropFilter="saturate(150%) blur(4px)"
+          backdropInvert="50%"
+          backdropBlur="3px"
+        />
         <DrawerContent backgroundColor={"#171a1b"} textColor={"#d9d9d9"}>
           <DrawerCloseButton className="hover:text-custom-pink" />
           <DrawerHeader className="shadow-snipped">SHOPPING CART</DrawerHeader>
@@ -137,10 +142,8 @@ function Cart() {
                 type="button"
                 className={`group bg-none border-2 w-56 border-custom-pink flex gap-12 items-center pl-2 justify-center max-sm:py-2 text-custom-textColor py-1 rounded text-lg duration-300 hover:bg-custom-pink`}
               >
-                  <span>Close order</span>
-                  <FaArrowRight
-                    className="transition-all ease-in-out -translate-x-7 group-hover:translate-x-0 duration-1000"
-                  />
+                <span>Close order</span>
+                <FaArrowRight className="transition-all ease-in-out -translate-x-7 group-hover:translate-x-0 duration-1000" />
               </button>
             </div>
           </DrawerFooter>

@@ -1,0 +1,6 @@
+<button className="min-w-[50px] px-[7px] text-2xl relative rounded-md duration-300 ease-linear hover:bg-custom-grayThree/50 shadow-snipped">
+                  // <span
+                      className={`heart ${heart ? "heartActived" : ""}`}
+                      onClick={() => setHeart(!heart)}
+                    ></span>
+                  </button>
