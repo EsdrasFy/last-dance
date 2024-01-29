@@ -17,7 +17,16 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
+  Button,
   Divider,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import ProductQuery from "@/app/api/ProductQuery";
 import Card from "@/app/interfaces/Card";
@@ -26,6 +35,7 @@ import ProductsById from "@/app/api/ProductsById";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import CarrosselShop from "@/app/components/ui/carrosel/carrosselShop";
 import Comments from "@/app/components/comments/comments";
+import RatingViewUi from "@/app/components/ratingViewUi";
 
 type Inputs = {
   cep: string;
@@ -152,9 +162,19 @@ function Page({ params }: any) {
   const handleInputChange = (event: any) => {
     setQtd(event.target.value);
   };
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent 
+        >
+          <div className="absolute top-[100px] mx-5 h-full">
+            <Image alt={selectImage} src={selectImage} width={999} height={999} quality={100} />
+          </div>
+        </ModalContent>
+      </Modal>
       <section className="h-full mt-28 bg-custom-grayTwo max-w-[1050px] w-full mx-12 max-md:mx-2 p-4 shadow-snipped text-custom-textColor">
         <div className="flex w-full h-[573px] gap-4 flex-col max-md:h-auto">
           <div className="flex w-full justify-between max-md:flex-col max-md:gap-3">
@@ -169,21 +189,17 @@ function Page({ params }: any) {
             </div>
             <div className="flex justify-between font-normal gap-12">
               <div className="flex items-center gap-3">
-                <span>4,6</span>
+                <span>{dataCard?.rating.toFixed(1)}</span>
                 <span className="flex text-custom-pink">
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStar />
-                  <FaStarHalfAlt />
+                <RatingViewUi rating={dataCard?.rating || 3.0} />
                 </span>
                 <span className="flex gap-1">
                   {" "}
-                  | <span className="text-custom-pink">107</span>
+                  | <span className="text-custom-pink">{dataCard?.quantityRatings}</span>
                 </span>
               </div>
               <div className="flex gap-2">
-                <span>232</span>
+                <span>{dataCard?.sold}</span>
                 <span>sold</span>
               </div>
             </div>
@@ -193,14 +209,14 @@ function Page({ params }: any) {
               <div>
                 <ul className="flex flex-col gap-[16.5px] min-h-full">
                   {dataCard?.images &&
-                    dataCard.images.slice(0, 5).map((imagem) => (
+                    dataCard.images.slice(0, 5).map((imagem, index) => (
                       <li
                         className={`w-14 h-[93px]  cursor-pointer ${
                           selectImage === imagem.url
                             ? "border-2 border-solid border-custom-pink"
                             : "border-2 border-solid border-custom-grayThree opacity-40"
                         } `}
-                        key={imagem.url}
+                        key={index}
                       >
                         <Image
                           alt="a"
@@ -224,6 +240,7 @@ function Page({ params }: any) {
                     width={500}
                     height={500}
                     className="cursor-zoom-in h-full w-full shadow-snipped"
+                    onClick={onOpen}
                   />
                 )}
               </div>
@@ -427,6 +444,12 @@ function Page({ params }: any) {
                   >
                     ADD CART
                   </button>
+                  <button className="min-w-[50px] px-[7px] text-2xl relative rounded-md duration-300 ease-linear hover:bg-custom-grayThree/50 shadow-snipped">
+                    <span
+                      className={`heart ${heart ? "heartActived" : ""}`}
+                      onClick={() => setHeart(!heart)}
+                    ></span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -489,9 +512,15 @@ function Page({ params }: any) {
           category="SAME BRAND"
         />
       </section>
-      <section className="mb-24 h-full mt-2 mx-2 bg-custom-grayTwo max-w-[1050px] w-full max-md:mx-5 p-4 shadow-snipped text-custom-textColor">
-        <Comments/>
-      </section>
+      
+      <Comments
+        title={dataCard?.title || " "}
+        img={dataCard?.images[0].url || " "}
+        id={params.slug[0]}
+        percentage={dataCard?.percentage || 100}
+        rating={dataCard?.rating || 3.0}
+        quantityRatings={dataCard?.quantityRatings || 0}
+      />
     </>
   );
 }

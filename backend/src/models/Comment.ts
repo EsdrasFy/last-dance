@@ -3,7 +3,6 @@ import sequelize from "../config/db";
 import Product from "./Product";
 import User from "./User";
 import CommentsUrls from "./CommentUrls";
-import CommentsLikes from "./CommentsLikes";
 
 const Comment = sequelize.define(
   "Comment",
@@ -33,6 +32,10 @@ const Comment = sequelize.define(
       type: DataTypes.DOUBLE,
       allowNull: false,
     },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     recommend: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -57,18 +60,8 @@ Comment.belongsTo(User, {
   foreignKey: "user_id",
 });
 
-CommentsUrls.belongsTo(Comment, {
-  foreignKey: "comment_id",
-  as: "comment",
-});
-CommentsLikes.belongsTo(Comment, {
-  foreignKey: "comment_id",
-  as: "comment",
-});
+Comment.hasMany(CommentsUrls, { foreignKey: "comment_id", as: "urls" });
+CommentsUrls.belongsTo(Comment, { foreignKey: "comment_id" });
 
-CommentsLikes.belongsTo(User, {
-  foreignKey: "user_id",
-  as: "user",
-});
 
 export default Comment;

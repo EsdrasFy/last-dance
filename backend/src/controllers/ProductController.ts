@@ -11,6 +11,7 @@ import ProductColor from "../models/ProductColors";
 import ProductSizes from "../models/ProductSizes";
 import ProductDetails from "../models/ProductDetails";
 import Card from "../interfaces/Card";
+import Comment from "../models/Comment";
 
 const { Translate } = require("@google-cloud/translate").v2;
 require("dotenv").config();
@@ -33,7 +34,6 @@ interface ProductAttributes extends Model<any, any> {
   price: number;
   state: boolean;
   category: string;
-  sizes?: string;
   brand?: string;
   guarantee?: string;
   variation?: string;
@@ -43,6 +43,11 @@ interface ProductAttributes extends Model<any, any> {
   interest_rate?: number;
   updated_at: Date;
   created_at: Date;
+  images: ProductImageAttributes[];
+  flags: ProductFlagsAttributes[];
+  sizes: ProductSizesAttributes[];
+  details: ProductDetailsAttributes[];
+  colors: ProductColorsAttributes[];
 }
 interface ProductImageAttributes extends Model<any, any> {
   image_id: number;
@@ -250,11 +255,9 @@ async function filterProducts(req: Request, res: Response) {
     ///////////////////////////////////////////////////////////////////////////////////
     if (categoria) {
       where.category = categoria;
-      
     }
     if (brand) {
       where.brand = brand;
-      
     }
     if (state) {
       where.state = state;
@@ -362,16 +365,22 @@ async function filterProducts(req: Request, res: Response) {
 }
 async function productsById(req: Request, res: Response) {
   const { ids } = req.params;
-  if(!ids){
-    res.status(404).json({msg: "Need id!"})
+  if (!ids) {
+    res.status(404).json({ msg: "Need id!" });
   }
   let intIds: number[] = ids.split("&").map((id) => parseInt(id, 10));
-  
+
   try {
-   
-    const products = await Product.findAll({ 
-      where:{
-        id:intIds
+    const comments: any = await Comment.findAll({
+      where: {
+        product_id: intIds,
+      },
+      attributes: ["rating", "recommend", "product_id"],
+    });
+
+    const products: ProductAttributes[] = (await Product.findAll({
+      where: {
+        id: intIds,
       },
       include: [
         {
@@ -400,18 +409,70 @@ async function productsById(req: Request, res: Response) {
           attributes: ["flag"],
         },
       ],
+    })) as ProductAttributes[];
+
+    // Calcula estatísticas das avaliações e recomendações agrupadas por produto
+    const productStats = comments.reduce((acc: any, comment: any) => {
+      const productId = comment.product_id;
+
+      // Inicializamos as propriedades se o produto ainda não foi processado
+      if (!acc[productId]) {
+        acc[productId] = {
+          ratings: [], // Armazenará as avaliações do produto
+          recommends: [], // Armazenará as recomendações do produto
+        };
+      }
+
+      // Adicionamos a avaliação e recomendação aos arrays correspondentes
+      acc[productId].ratings.push(comment.rating);
+      acc[productId].recommends.push(comment.recommend);
+
+      return acc;
+    }, {});
+
+    // Mapeia os produtos, adicionando informações calculadas das estatísticas
+    const productsWithStats = products.map((product) => {
+      const productId = product.id;
+      const { ratings, recommends } = productStats[productId] || {};
+
+      // Calculamos a média da avaliação
+      const averageRating =
+        ratings && ratings.length > 0
+          ? ratings.reduce((a: any, b: any) => a + b) / ratings.length
+          : 0;
+
+      // Calculamos a porcentagem de recomendação
+      const recommendPercentage =
+        recommends && recommends.length > 0
+          ? (recommends.filter((recommend: boolean) => recommend).length /
+              recommends.length) *
+            100
+          : 0;
+      const rating = parseFloat(averageRating.toFixed(2));
+      const percentage = parseFloat(recommendPercentage.toFixed(2));
+      // Criamos um novo objeto com informações calculadas e outras informações do produto
+      return {
+        ...product.toJSON(),
+        rating: rating !== 0 ? rating : 3,
+        quantityRatings: ratings ? ratings.length : 0,
+        percentage: percentage !== 0 && recommends.length !== 0 ? percentage : 100,
+        quantityRecommends: recommends ? recommends.length : 0,
+      };
     });
-    const foundIds = products.map((product:any ) => product.id);
+
+    // Obtém os IDs dos produtos encontrados
+    const foundIds = productsWithStats.map((product) => product.id);
+
+    // Obtém os IDs dos produtos não encontrados
     const notFoundIds = intIds.filter((id) => !foundIds.includes(id));
 
-    // Criar resposta personalizada
+    // Cria a resposta final com os produtos e informações adicionais
     const response = {
-      products,
+      products: productsWithStats,
       notFoundIds,
     };
 
     res.status(200).json(response);
-
   } catch (error) {
     console.error("Erro ao obter produtos:", error);
     res.status(500).json({ error: "Erro ao obter produtos" });

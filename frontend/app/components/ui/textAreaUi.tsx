@@ -5,6 +5,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import React from "react";
 
 interface inputProps {
+  type: string;
   label: string;
   name: string;
   register: Function;
@@ -15,13 +16,14 @@ interface inputProps {
   autofocus?: boolean;
   disabled?: boolean;
   classname?: string;
-  placeholder: string;
+  pleaceholder: string;
   error?: any;
   value?: string;
   defaultvalue?: any;
 }
 
 function TextAreaUi({
+  type,
   label,
   register,
   name,
@@ -29,7 +31,7 @@ function TextAreaUi({
   maxLength,
   minLength,
   classname,
-  placeholder,
+  pleaceholder,
   error,
   value,
   autofocus,
@@ -44,8 +46,9 @@ function TextAreaUi({
         {label}
       </label>
       <Textarea
-        padding=" 4px 0"
-        placeholder={placeholder}
+        type={type}
+        padding="6px 0"
+        placeholder={pleaceholder}
         id={name}
         borderWidth="2px"
         paddingLeft="10px"

@@ -1,10 +1,35 @@
 {
   "pages": {
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
+    ],
+    "/shop/[[...slug]]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/shop/[[...slug]]/page.js"
+    ],
+    "/shop/product/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/shop/product/loading.js"
+    ],
+    "/shop/product/[...slug]/loading": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/shop/product/[...slug]/loading.js"
+    ],
+    "/shop/product/[...slug]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/shop/product/[...slug]/page.js"
     ],
     "/(login-routes)/layout": [
       "static/chunks/webpack.js",
@@ -16,20 +41,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/(login-routes)/login/page.js"
     ],
-    "/shop/[[...slug]]/page": [
+    "/(my-account)/my-account/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/shop/[[...slug]]/page.js"
+      "static/chunks/app/(my-account)/my-account/page.js"
     ],
-    "/shop/product/[...slug]/page": [
+    "/(my-account)/my-account/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/shop/product/[...slug]/page.js"
+      "static/chunks/app/(my-account)/my-account/layout.js"
     ],
-    "/not-found": [
+    "/(my-account)/my-account/loading": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/not-found.js"
+      "static/chunks/app/(my-account)/my-account/loading.js"
     ]
   }
 }

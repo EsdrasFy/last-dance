@@ -42,6 +42,10 @@ interface Image {
     details: Detail[];
     sizes: Size[];
     flags: Flag[];
+    rating: number
+    quantityRatings: number
+    percentage: number
+    quantityRecommends:number
   }
   
   export default Card;

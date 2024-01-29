@@ -27,15 +27,9 @@ const nextAuthOptions: NextAuthOptions = {
             redirect: false,
           }),
         });
-        console.log("response api login");
-        console.log(response);
 
         const user = await response.json();
         if (user && response.ok) {
-          console.log("user");
-
-          console.log(user);
-
           return user;
         }
 
@@ -58,9 +52,6 @@ const nextAuthOptions: NextAuthOptions = {
 
       let apiResp = await axios.get(url, {});
       session.user = apiResp.data.user as any;
-      console.log("atualizou");
-      console.log(apiResp.data);
-
       return session;
     },
   },

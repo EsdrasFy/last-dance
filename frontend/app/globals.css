@@ -21,6 +21,7 @@
 
 body {
   background-color: #171a1b !important;
+  size: landscape;
 }
 .shadow-snipped {
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
@@ -273,4 +274,22 @@ svg.progressbar{
   position: absolute;
   top: 0;
   left: 0;
+}
+.input-file{
+  border-radius: 5px;
+  font-size: 13px;
+  background-color: #171a1b;
+  border: 2px solid white;
+  color: #ed145b;
+}
+.input-file[type="file"]::file-selector-button {
+  border-radius: 5px;
+  background-color: #3a3a3a;
+}
+.input-file[type="file"]::file-selector-button:hover {
+  background-color: #555;
+}
+.chakra-alert{
+  background-color: #555 !important;
+  color: #dfdfdf !important;
 }

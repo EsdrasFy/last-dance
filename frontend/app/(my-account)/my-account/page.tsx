@@ -41,9 +41,7 @@ async function Page() {
   
   return (
       <section
-        className={`h-screen min-w-full flex items-start justify-center ${
-          render && "soft-entry"
-        }`}
+        className={`h-screen min-w-full flex items-start justify-center `}
       >
         <main className=" max-w-[900px] w-full mx-8 bg-grayOne flex  max-sm:mx-2 shadow-snipped relative h-fit  flex-col mt-36 max-md:mt-28">
           <span

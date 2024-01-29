@@ -32,6 +32,7 @@ routes.get("/scraping/:content", ProductController.scraping);
 // Rotas para comentarios
 
 routes.post("/comment/create", CommentController.createComment )
+routes.get("/comments/:id", CommentController.comments )
 export default routes;
 
 /*arâmetros da query:
